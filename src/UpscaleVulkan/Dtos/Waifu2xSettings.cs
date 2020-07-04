@@ -7,5 +7,9 @@ namespace UpscaleVulkan.Dtos
         public int Scale { get; set; }
 
         public int NoiseLevel { get; set; }
+        
+        public string Executable { get; set; }
+        
+        public string  OutputPath { get; set; }
     }
 }

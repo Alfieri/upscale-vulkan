@@ -2,10 +2,10 @@
 {
     public class ScaledFrame
     {
-        public ScaledFrame(string framePath, string frameName)
+        public ScaledFrame(Frame frame)
         {
-            this.FramePath = framePath;
-            this.FrameName = frameName;
+            this.FrameName = frame.FrameName;
+            this.FramePath = frame.FramePath;
         }
         
         public string FramePath { get; private set; }
