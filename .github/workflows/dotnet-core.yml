@@ -1,4 +1,4 @@
-name: .NET Core
+name: CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  ci-build:
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 3.1.101
     - name: Install dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build upscaler
       run: dotnet build --configuration Release --no-restore
-    - name: Test
+    - name: Test upscaler
       run: dotnet test --no-restore --verbosity normal
