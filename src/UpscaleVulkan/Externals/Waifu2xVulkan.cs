@@ -2,18 +2,20 @@
 {
     using System.Diagnostics;
     using System.IO;
-    using System.Net;
-    using System.Text;
     using System.Threading.Tasks;
     using Core;
     using Dtos;
+    using Exceptions;
+    using Infrastructure;
 
     public class Waifu2xVulkan : IWaifu2x
     {
+        private readonly IFileProxy _fileProxy;
         private string _outputPath;
 
-        public Waifu2xVulkan(Waifu2xSettings waifu2XSettings)
+        public Waifu2xVulkan(Waifu2xSettings waifu2XSettings, IFileProxy fileProxy)
         {
+            this._fileProxy = fileProxy;
             this._outputPath = waifu2XSettings.OutputPath;
             this.ProcessStartInfo = new ProcessStartInfo(waifu2XSettings.Executable);
             this.SetArguments(waifu2XSettings);
@@ -28,14 +30,13 @@
                 $"-i {Path.Combine(frame.FramePath, frame.FrameName)} -o {outFile}";
             var process = Process.Start(this.ProcessStartInfo);
             process.WaitForExit();
-            bool scaledFrameExists = await Task.Run<bool>(() => File.Exists(outFile));
+            bool scaledFrameExists = await this._fileProxy.ExistsAsync(outFile);
             if (scaledFrameExists)
             {
                 return new ScaledFrame(frame);
             }
 
-            // TODO: handle error
-            return null;
+            throw new ScalingFailedException("Upscaled frame could not be found.");
         }
 
         private void SetArguments(Waifu2xSettings waifu2XSettings)
