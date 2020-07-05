@@ -15,6 +15,10 @@
 
         private List<ScaledFrame> _scaledFrames = new List<ScaledFrame>();
 
+        internal Video()
+        {
+        }
+        
         public Video(FileInfo videoFile)
         {
             this._videoFile = videoFile;
@@ -31,7 +35,7 @@
             this._frames = await videoConverter.ExtractFrames();
         }
 
-        public async Task Upscale(IWaifu2x waifu2X)
+        public virtual async Task Upscale(IWaifu2x waifu2X)
         {
             IEnumerable<Frame> processableFrames = this._frames.Where(frame => !this.IsAlreadyUpscaled(frame));
             foreach (var frame in processableFrames)

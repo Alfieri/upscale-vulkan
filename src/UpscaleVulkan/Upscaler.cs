@@ -1,6 +1,7 @@
 ﻿namespace UpscaleVulkan
 {
     using System.Threading.Tasks;
+    using Core;
     using Dtos;
 
     public class Upscaler : IUpscaler
@@ -12,9 +13,9 @@
             this._upscaleSettings = upscaleSettings;
         }
 
-        public Task Upscale()
+        public Task Upscale(Video videoFile, IWaifu2x waifu2xImplementation)
         {
-            throw new System.NotImplementedException();
+            return videoFile.Upscale(waifu2xImplementation);
         }
     }
 }
