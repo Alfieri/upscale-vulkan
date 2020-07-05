@@ -20,7 +20,7 @@ namespace UpscaleVulkan.Test.Externals
                 Scale = 2
             });
 
-            waifu2XVulkan.ProcessStartInfo.Arguments.Should()
+            waifu2XVulkan.ProcessStartInfo.ArgumentList.Should()
                 .Contain("-m someModelPath").And
                 .Contain("-s 2").And
                 .Contain("-n 2");

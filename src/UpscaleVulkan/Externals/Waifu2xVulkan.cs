@@ -15,10 +15,8 @@
         public Waifu2xVulkan(Waifu2xSettings waifu2XSettings)
         {
             this._outputPath = waifu2XSettings.OutputPath;
-            this.ProcessStartInfo = new ProcessStartInfo(waifu2XSettings.Executable)
-            {
-                Arguments = this.BuildArguments(waifu2XSettings)
-            };
+            this.ProcessStartInfo = new ProcessStartInfo(waifu2XSettings.Executable);
+            this.SetArguments(waifu2XSettings);
         }
 
         internal ProcessStartInfo ProcessStartInfo { get; }
@@ -40,25 +38,22 @@
             return null;
         }
 
-        private string BuildArguments(Waifu2xSettings waifu2XSettings)
+        private void SetArguments(Waifu2xSettings waifu2XSettings)
         {
-            var arguments = new StringBuilder();
             if (!string.IsNullOrEmpty(waifu2XSettings.ModelPath))
             {
-                arguments.Append($"-m {waifu2XSettings.ModelPath} ");
+                this.ProcessStartInfo.ArgumentList.Add($"-m {waifu2XSettings.ModelPath}");
             }
 
             if (waifu2XSettings.Scale > 0)
             {
-                arguments.Append($"-s {waifu2XSettings.Scale} ");
+                this.ProcessStartInfo.ArgumentList.Add($"-s {waifu2XSettings.Scale}");
             }
 
             if (waifu2XSettings.NoiseLevel > 0)
             {
-                arguments.Append($"-n {waifu2XSettings.NoiseLevel} ");
+                this.ProcessStartInfo.ArgumentList.Add($"-n {waifu2XSettings.NoiseLevel}");
             }
-
-            return arguments.ToString();
         }
     }
 }
