@@ -41,7 +41,6 @@ namespace UpscaleVulkan.Test.Externals
                 Executable = "echo",
                 OutputPath = "someOutPath"
             }, fileProxy.Object);
-            waifu2XVulkan.ProcessStartInfo.Arguments = "Hello World";
             
             ScaledFrame scaledFrame = await waifu2XVulkan.Upscale(frame);
             
@@ -60,7 +59,6 @@ namespace UpscaleVulkan.Test.Externals
                 Executable = "echo",
                 OutputPath = "someOutPath"
             }, fileProxy.Object);
-            waifu2XVulkan.ProcessStartInfo.Arguments = "Hello World";
 
             waifu2XVulkan.Invoking(w => w.Upscale(frame)).Should().Throw<ScalingFailedException>();
         }

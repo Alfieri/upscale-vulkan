@@ -26,10 +26,10 @@
         public async Task<ScaledFrame> Upscale(Frame frame)
         {
             string outFile = Path.Combine(this._outputPath, frame.FrameName);
-            this.ProcessStartInfo.Arguments +=
-                $"-i {Path.Combine(frame.FramePath, frame.FrameName)} -o {outFile}";
+            this.ProcessStartInfo.ArgumentList.Add($"-i {Path.Combine(frame.FramePath, frame.FrameName)}");
+            this.ProcessStartInfo.ArgumentList.Add($"-o {outFile}");
             var process = Process.Start(this.ProcessStartInfo);
-            process.WaitForExit();
+            process?.WaitForExit();
             bool scaledFrameExists = await this._fileProxy.ExistsAsync(outFile);
             if (scaledFrameExists)
             {
