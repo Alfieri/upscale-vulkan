@@ -19,4 +19,8 @@
     <ProjectReference Include="..\UpscaleVulkan\UpscaleVulkan.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Externals" />
+  </ItemGroup>
+
 </Project>
