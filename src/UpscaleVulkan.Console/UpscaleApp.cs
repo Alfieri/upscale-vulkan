@@ -1,25 +1,29 @@
 namespace UpscaleVulkan.Console
 {
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
 
     public class UpscaleApp
     {
-        private readonly IConfigurationRoot _configuration;
         private readonly ILogger<UpscaleApp> _logger;
         private readonly IUpscaler _upscaler;
+        private readonly IWaifu2x _waifu2X;
+        private readonly IVideoConverter _videoConverter;
 
-        public UpscaleApp(IConfigurationRoot configuration, ILogger<UpscaleApp> logger, IUpscaler upscaler)
+        public UpscaleApp(ILogger<UpscaleApp> logger, IUpscaler upscaler, IWaifu2x waifu2X, IVideoConverter videoConverter)
         {
-            this._configuration = configuration;
             this._logger = logger;
             this._upscaler = upscaler;
+            this._waifu2X = waifu2X;
+            this._videoConverter = videoConverter;
         }
         
-        public Task Run(string[] args)
+        public async Task Run(string[] args)
         {
-            return Task.Run(() => this._logger.LogInformation("Hello World"));
+            await this._upscaler.ExtractFrames(this._videoConverter);
+            await this._upscaler.Upscale(this._waifu2X);
+            //await this._upscaler.CreateVideoFromScaledFrames(this._videoConverter);
+            //await this._upscaler.CreateFinaleVideo(this._videoConverter);
         }
     }
 }

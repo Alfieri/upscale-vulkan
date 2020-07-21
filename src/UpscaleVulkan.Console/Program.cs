@@ -59,7 +59,6 @@
             });
             
             configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false, true)
                 .Build();
             serviceCollection.AddSingleton<IConfigurationRoot>(configuration);
