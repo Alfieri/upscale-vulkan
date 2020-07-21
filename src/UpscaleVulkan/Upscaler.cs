@@ -1,5 +1,6 @@
 ﻿namespace UpscaleVulkan
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Core;
     using Dtos;
@@ -8,14 +9,41 @@
     {
         private readonly UpscaleSettings _upscaleSettings;
 
+        private Video _video;
+
         public Upscaler(UpscaleSettings upscaleSettings)
         {
             this._upscaleSettings = upscaleSettings;
+            this._video = new Video(new FileInfo(this._upscaleSettings.VideoFile));
         }
 
-        public Task Upscale(Video videoFile, IWaifu2x waifu2xImplementation)
+        /// <summary>
+        /// Just used from Tests
+        /// </summary>
+        /// <param name="video">Mocked video</param>
+        internal void SetVideo(Video video)
         {
-            return videoFile.Upscale(waifu2xImplementation);
+            this._video = video;
+        }
+
+        public Task Upscale(IWaifu2x waifu2xImplementation)
+        {
+            return this._video.Upscale(waifu2xImplementation);
+        }
+
+        public Task ExtractFrames(IVideoConverter videoConverter)
+        {
+            return this._video.ExtractFramesFromVideo(videoConverter);
+        }
+
+        public Task CreateVideoFromScaledFrames(IVideoConverter videoConverter)
+        {
+            return this._video.CreateVideoFromUpscaledFrames(videoConverter);
+        }
+
+        public Task CreateFinaleVideo(IVideoConverter videoConverter)
+        {
+            return this._video.CreateFinaleVideo(videoConverter);
         }
     }
 }

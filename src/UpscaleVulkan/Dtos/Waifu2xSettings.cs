@@ -3,6 +3,8 @@ namespace UpscaleVulkan.Dtos
     public class Waifu2xSettings
     {
         public string ModelPath { get; set; }
+        
+        public string WorkingDir { get; set; }
 
         public int Scale { get; set; }
 

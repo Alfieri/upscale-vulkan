@@ -23,6 +23,8 @@
         {
             this._videoFile = videoFile;
         }
+        
+        public FileInfo VideoFile => this._videoFile;
 
         public Video(FileInfo videoFile, List<Frame> frames)
         {
@@ -30,9 +32,9 @@
             this._frames = frames;
         }
 
-        public async Task ExtractFramesFromVideo(IVideoConverter videoConverter)
+        public virtual async Task ExtractFramesFromVideo(IVideoConverter videoConverter)
         {
-            this._frames = await videoConverter.ExtractFrames();
+            this._frames = await videoConverter.ExtractFrames(this);
         }
 
         public virtual async Task Upscale(IWaifu2x waifu2X)
@@ -45,9 +47,14 @@
             }
         }
 
-        public async Task<IntermediateVideo> CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
+        public virtual async Task<IntermediateVideo> CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
         {
             return await videoConverter.CreateVideoFromFrames(this._framerate, this._scaledFrames);
+        }
+
+        public virtual Task CreateFinaleVideo(IVideoConverter videoConverter)
+        {
+            return videoConverter.CreateFinaleVideo(this);
         }
 
         private bool IsAlreadyUpscaled(Frame frame)

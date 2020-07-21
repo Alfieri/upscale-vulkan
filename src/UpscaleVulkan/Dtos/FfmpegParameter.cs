@@ -3,6 +3,8 @@ namespace UpscaleVulkan.Dtos
     public class FfmpegParameter
     {
         public string FfmpegBin { get; set; }
+        
+        public string TempPath { get; set; }
 
         public string HardwareAcceleration { get; set; }
 

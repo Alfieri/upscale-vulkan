@@ -4,7 +4,7 @@
 
     public class Frame
     {
-        public Frame(string framePath, string frameName, bool isUpscaled)
+        public Frame(string framePath, string frameName, bool isUpscaled = false)
         {
             this.FrameName = frameName;
             this.FramePath = framePath;

@@ -4,8 +4,6 @@
 
     public class UpscaleSettings
     {
-        public FileInfo VideoFile { get; private set; }
-
-        public string TempPath { get; private set; }
+        public string VideoFile { get; set; }
     }
 }
