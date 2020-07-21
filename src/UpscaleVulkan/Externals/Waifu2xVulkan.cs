@@ -9,17 +9,20 @@
     using Dtos;
     using Exceptions;
     using Infrastructure;
+    using Microsoft.Extensions.Logging;
 
     public class Waifu2xVulkan : IWaifu2x
     {
         private readonly Waifu2xSettings _waifu2XSettings;
         private readonly IFileProxy _fileProxy;
+        private readonly ILogger<Waifu2xVulkan> _logger;
         private string _outputPath;
 
-        public Waifu2xVulkan(Waifu2xSettings waifu2XSettings, IFileProxy fileProxy)
+        public Waifu2xVulkan(Waifu2xSettings waifu2XSettings, IFileProxy fileProxy, ILogger<Waifu2xVulkan> logger)
         {
             this._waifu2XSettings = waifu2XSettings;
             this._fileProxy = fileProxy;
+            this._logger = logger;
             this._outputPath = waifu2XSettings.OutputPath;
         }
 
@@ -28,10 +31,16 @@
             string outputFile = Path.Combine(this._outputPath, frame.FrameName);
             string inputFile = Path.Combine(frame.FramePath, frame.FrameName);
 
-            var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
-            var process = Process.Start(processStartInfo);
-            process?.WaitForExit();
             bool scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
+            if (!scaledFrameExists)
+            {
+                var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
+                this._logger.LogInformation($"{processStartInfo.FileName} {processStartInfo.Arguments}");
+                var process = Process.Start(processStartInfo);
+                process?.WaitForExit();
+            }
+            
+            scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
             if (scaledFrameExists)
             {
                 return new ScaledFrame(frame);
