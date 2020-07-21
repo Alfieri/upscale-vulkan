@@ -17,15 +17,6 @@
             this._video = new Video(new FileInfo(this._upscaleSettings.VideoFile));
         }
 
-        /// <summary>
-        /// Just used from Tests
-        /// </summary>
-        /// <param name="video">Mocked video</param>
-        internal void SetVideo(Video video)
-        {
-            this._video = video;
-        }
-
         public Task Upscale(IWaifu2x waifu2xImplementation)
         {
             return this._video.Upscale(waifu2xImplementation);

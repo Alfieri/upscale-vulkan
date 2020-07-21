@@ -39,7 +39,7 @@
 
         public virtual async Task Upscale(IWaifu2x waifu2X)
         {
-            IEnumerable<Frame> processableFrames = this._frames.Where(frame => !this.IsAlreadyUpscaled(frame));
+            IEnumerable<Frame> processableFrames = this._frames.Where(frame => !this.IsAlreadyUpscaled(frame)).OrderBy(f => f.FrameName);
             foreach (var frame in processableFrames)
             {
                 ScaledFrame scaledFrame = await frame.Upscale(waifu2X);
