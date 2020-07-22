@@ -14,11 +14,9 @@
         private List<Frame> _frames;
 
         private List<ScaledFrame> _scaledFrames = new List<ScaledFrame>();
-
-        internal Video()
-        {
-        }
         
+        private IntermediateVideo intermediateVideo;
+
         public Video(FileInfo videoFile)
         {
             this._videoFile = videoFile;
@@ -32,12 +30,12 @@
             this._frames = frames;
         }
 
-        public virtual async Task ExtractFramesFromVideo(IVideoConverter videoConverter)
+        public async Task ExtractFramesFromVideo(IVideoConverter videoConverter)
         {
             this._frames = await videoConverter.ExtractFrames(this);
         }
 
-        public virtual async Task Upscale(IWaifu2x waifu2X)
+        public async Task Upscale(IWaifu2x waifu2X)
         {
             IEnumerable<Frame> processableFrames = this._frames.Where(frame => !this.IsAlreadyUpscaled(frame)).OrderBy(f => f.FrameName);
             foreach (var frame in processableFrames)
@@ -47,12 +45,18 @@
             }
         }
 
-        public virtual async Task<IntermediateVideo> CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
+        public async Task CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
         {
-            return await videoConverter.CreateVideoFromFrames(this._framerate, this._scaledFrames);
+            if (this._scaledFrames.Count <= 0)
+            {
+                return;
+            }
+            
+            string scaledPath = this._scaledFrames[0].FramePath; 
+            this.intermediateVideo = await videoConverter.CreateVideoFromFrames(this._framerate, scaledPath);
         }
 
-        public virtual Task CreateFinaleVideo(IVideoConverter videoConverter)
+        public Task CreateFinaleVideo(IVideoConverter videoConverter)
         {
             return videoConverter.CreateFinaleVideo(this);
         }

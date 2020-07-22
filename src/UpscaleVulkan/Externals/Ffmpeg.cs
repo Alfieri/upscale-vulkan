@@ -22,15 +22,6 @@
             this.CreateFramesOutputDirectory();
         }
 
-        private void CreateFramesOutputDirectory()
-        {
-            this._framesOutputDir = Path.Combine(this._ffmpegParameter.TempPath, "frames");
-            if (!Directory.Exists(this._framesOutputDir))
-            {
-                Directory.CreateDirectory(this._framesOutputDir);
-            }
-        }
-
         public Task<List<Frame>> ExtractFrames(Video video)
         {
             if (this.FramesOutputDirIsNotEmpty())
@@ -58,14 +49,44 @@
             });
         }
 
+        private void CreateFramesOutputDirectory()
+        {
+            this._framesOutputDir = Path.Combine(this._ffmpegParameter.TempPath, "frames");
+            if (!Directory.Exists(this._framesOutputDir))
+            {
+                Directory.CreateDirectory(this._framesOutputDir);
+            }
+        }
+
         private bool FramesOutputDirIsNotEmpty()
         {
             return Directory.GetFiles(this._framesOutputDir).Length > 0;
         }
 
-        public Task<IntermediateVideo> CreateVideoFromFrames(double framerate, List<ScaledFrame> scaledFrames)
+        public Task<IntermediateVideo> CreateVideoFromFrames(double framerate, string scaledInputPath)
         {
-            throw new System.NotImplementedException();
+            string intermediateVideo =
+                Path.Combine(this._ffmpegParameter.TempPath, this._ffmpegParameter.IntermediateVideoFile);
+            
+            var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegParameter.FfmpegBin);
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.HardwareAcceleration);
+            ffmpegProcessStartInfo.ArgumentList.Add("-y");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-framerate {framerate}");
+            ffmpegProcessStartInfo.ArgumentList.Add("-f image2");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-i {scaledInputPath}");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-r {framerate}");
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.FramesToVideoPixFormat);
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.Codec);
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.Preset);
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.AdditionalCodecParameter);
+            ffmpegProcessStartInfo.ArgumentList.Add(intermediateVideo);
+
+            return Task.Run(() =>
+            {
+                var process = Process.Start(ffmpegProcessStartInfo);
+                process?.WaitForExit();
+                return new IntermediateVideo(new FileInfo(intermediateVideo));
+            });
         }
 
         public Task CreateFinaleVideo(Video video)
