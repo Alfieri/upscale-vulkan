@@ -91,7 +91,21 @@
 
         public Task CreateFinaleVideo(Video video)
         {
-            throw new System.NotImplementedException();
+            string outputFile = Path.Combine(video.VideoFile.DirectoryName,
+                $"{Path.GetFileNameWithoutExtension(video.VideoFile.Name)}_out.mp4");
+            var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegParameter.FfmpegBin);
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.HardwareAcceleration);
+            ffmpegProcessStartInfo.ArgumentList.Add("-y");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-i {video.IntermediateVideo.IntermediateVideoFile.FullName}");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-i {video.VideoFile.FullName}");
+            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.ConcatVideosParameter);
+            ffmpegProcessStartInfo.ArgumentList.Add(outputFile);
+            
+            return Task.Run(() =>
+            {
+                var process = Process.Start(ffmpegProcessStartInfo);
+                process?.WaitForExit();
+            });
         }
     }
 }

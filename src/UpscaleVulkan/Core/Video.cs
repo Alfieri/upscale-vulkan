@@ -24,6 +24,8 @@
         
         public FileInfo VideoFile => this._videoFile;
 
+        public IntermediateVideo IntermediateVideo => this.intermediateVideo;
+
         public Video(FileInfo videoFile, List<Frame> frames)
         {
             this._videoFile = videoFile;
