@@ -43,8 +43,26 @@
             {
                 var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
                 this._logger.LogInformation($"{processStartInfo.FileName} {processStartInfo.Arguments}");
-                var process = Process.Start(processStartInfo);
-                process?.WaitForExit();
+                var process = new Process { StartInfo = processStartInfo };
+                process.ErrorDataReceived += (sender, args) => this._logger.LogError($"Waifu2x Vulkan output: {args.Data}");
+                process.OutputDataReceived += (sender, args) => this._logger.LogDebug($"Waifu2x Vulkan output: {args.Data}");
+                process.Start();
+                if (process == null)
+                {
+                    throw new ScalingFailedException("could not start Waifu2x Vulkan.");
+                }
+                
+                process.WaitForExit();
+                if (process.ExitCode > 0)
+                {
+                    process.BeginErrorReadLine();
+                }
+
+                process.BeginOutputReadLine();
+            }
+            else
+            {
+                this._logger.LogInformation($"{outputFile} scaled frame exists");
             }
             
             scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
@@ -60,8 +78,8 @@
         {
             var processStartInfo = new ProcessStartInfo("bash")
             {
-                // RedirectStandardError = true,
-                // RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
                 UseShellExecute = false,
                 WorkingDirectory = this._waifu2XSettings.WorkingDir,
                 Arguments = $"-c \"{this._waifu2XSettings.Executable} "
