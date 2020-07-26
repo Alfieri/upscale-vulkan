@@ -1,6 +1,7 @@
 ﻿namespace UpscaleVulkan
 {
     using System.Threading.Tasks;
+    using Core;
 
     public interface IUpscaler
     {

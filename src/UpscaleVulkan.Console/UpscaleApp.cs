@@ -1,6 +1,7 @@
 namespace UpscaleVulkan.Console
 {
     using System.Threading.Tasks;
+    using Core;
     using Microsoft.Extensions.Logging;
 
     public class UpscaleApp

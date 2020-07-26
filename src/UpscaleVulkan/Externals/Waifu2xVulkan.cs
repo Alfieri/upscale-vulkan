@@ -1,5 +1,6 @@
 ﻿namespace UpscaleVulkan.Externals
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
@@ -12,8 +13,11 @@
     public class Waifu2xVulkan : IWaifu2x
     {
         private readonly Waifu2xSettings _waifu2XSettings;
+        
         private readonly IFileProxy _fileProxy;
+        
         private readonly ILogger<Waifu2xVulkan> _logger;
+        
         private string _outputPath;
 
         public Waifu2xVulkan(Waifu2xSettings waifu2XSettings, IFileProxy fileProxy, ILogger<Waifu2xVulkan> logger)
@@ -21,6 +25,11 @@
             this._waifu2XSettings = waifu2XSettings;
             this._fileProxy = fileProxy;
             this._logger = logger;
+            if (string.IsNullOrEmpty(waifu2XSettings.OutputPath))
+            {
+                throw new ArgumentNullException(nameof(waifu2XSettings.OutputPath));
+            }
+            
             this._outputPath = waifu2XSettings.OutputPath;
         }
 
@@ -51,8 +60,8 @@
         {
             var processStartInfo = new ProcessStartInfo("bash")
             {
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
+                // RedirectStandardError = true,
+                // RedirectStandardOutput = true,
                 UseShellExecute = false,
                 WorkingDirectory = this._waifu2XSettings.WorkingDir,
                 Arguments = $"-c \"{this._waifu2XSettings.Executable} "

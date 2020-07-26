@@ -14,8 +14,6 @@
         private List<Frame> _frames = new List<Frame>();
 
         private readonly List<ScaledFrame> _scaledFrames = new List<ScaledFrame>();
-        
-        private IntermediateVideo intermediateVideo;
 
         public Video(FileInfo videoFile)
         {
@@ -24,7 +22,9 @@
         
         public FileInfo VideoFile => this._videoFile;
 
-        public IntermediateVideo IntermediateVideo => this.intermediateVideo;
+        public List<ScaledFrame> ScaledFrames => this._scaledFrames;
+
+        public double Framerate => this._framerate;
 
         public Video(FileInfo videoFile, List<Frame> frames)
         {
@@ -46,22 +46,6 @@
                 ScaledFrame scaledFrame = await frame.Upscale(waifu2X);
                 this._scaledFrames.Add(scaledFrame);
             }
-        }
-
-        public async Task CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
-        {
-            if (this._scaledFrames.Count <= 0)
-            {
-                return;
-            }
-            
-            string scaledPath = this._scaledFrames[0].FramePath; 
-            this.intermediateVideo = await videoConverter.CreateVideoFromFrames(this._framerate, scaledPath);
-        }
-
-        public Task CreateFinaleVideo(IVideoConverter videoConverter)
-        {
-            return videoConverter.CreateFinaleVideo(this);
         }
 
         private bool IsAlreadyUpscaled(Frame frame)

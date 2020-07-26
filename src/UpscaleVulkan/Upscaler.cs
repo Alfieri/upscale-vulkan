@@ -7,14 +7,14 @@
 
     public class Upscaler : IUpscaler
     {
-        private readonly UpscaleSettings _upscaleSettings;
-
         private Video _video;
+        
+        private IntermediateVideo _intermediateVideo;
 
         public Upscaler(UpscaleSettings upscaleSettings)
         {
-            this._upscaleSettings = upscaleSettings;
-            this._video = new Video(new FileInfo(this._upscaleSettings.VideoFile));
+            this._video = new Video(new FileInfo(upscaleSettings.VideoFile));
+            this._intermediateVideo = new IntermediateVideo(this._video);
         }
 
         public Task Upscale(IWaifu2x waifu2xImplementation)
@@ -29,12 +29,12 @@
 
         public Task CreateVideoFromScaledFrames(IVideoConverter videoConverter)
         {
-            return this._video.CreateVideoFromUpscaledFrames(videoConverter);
+            return this._intermediateVideo.CreateVideoFromUpscaledFrames(videoConverter);
         }
 
         public Task CreateFinaleVideo(IVideoConverter videoConverter)
         {
-            return this._video.CreateFinaleVideo(videoConverter);
+            return this._intermediateVideo.CreateFinaleVideo(videoConverter);
         }
     }
 }

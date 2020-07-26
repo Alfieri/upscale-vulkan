@@ -1,15 +1,15 @@
-namespace UpscaleVulkan
+namespace UpscaleVulkan.Core
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
-    using Core;
 
     public interface IVideoConverter
     {
         Task<List<Frame>> ExtractFrames(Video video);
         
-        Task<IntermediateVideo> CreateVideoFromFrames(double framerate, string scaledInputPath);
+        Task<FileInfo> CreateVideoFromFrames(double framerate, string scaledInputPath);
         
-        Task CreateFinaleVideo(Video video);
+        Task CreateFinaleVideo(IntermediateVideo intermediateVideo);
     }
 }

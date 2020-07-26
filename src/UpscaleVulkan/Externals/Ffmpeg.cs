@@ -19,7 +19,11 @@
         {
             this._ffmpegParameter = ffmpegParameter;
             this._logger = logger;
-            this.CreateFramesOutputDirectory();
+            this._framesOutputDir = Path.Combine(this._ffmpegParameter.TempPath, "frames");
+            if (!Directory.Exists(this._framesOutputDir))
+            {
+                Directory.CreateDirectory(this._framesOutputDir);
+            }
         }
 
         public Task<List<Frame>> ExtractFrames(Video video)
@@ -49,21 +53,12 @@
             });
         }
 
-        private void CreateFramesOutputDirectory()
-        {
-            this._framesOutputDir = Path.Combine(this._ffmpegParameter.TempPath, "frames");
-            if (!Directory.Exists(this._framesOutputDir))
-            {
-                Directory.CreateDirectory(this._framesOutputDir);
-            }
-        }
-
         private bool FramesOutputDirIsNotEmpty()
         {
             return Directory.GetFiles(this._framesOutputDir).Length > 0;
         }
 
-        public Task<IntermediateVideo> CreateVideoFromFrames(double framerate, string scaledInputPath)
+        public Task<FileInfo> CreateVideoFromFrames(double framerate, string scaledInputPath)
         {
             string intermediateVideo =
                 Path.Combine(this._ffmpegParameter.TempPath, this._ffmpegParameter.IntermediateVideoFile);
@@ -85,19 +80,19 @@
             {
                 var process = Process.Start(ffmpegProcessStartInfo);
                 process?.WaitForExit();
-                return new IntermediateVideo(new FileInfo(intermediateVideo));
+                return new FileInfo(intermediateVideo);
             });
         }
 
-        public Task CreateFinaleVideo(Video video)
+        public Task CreateFinaleVideo(IntermediateVideo intermediateVideo)
         {
-            string outputFile = Path.Combine(video.VideoFile.DirectoryName,
-                $"{Path.GetFileNameWithoutExtension(video.VideoFile.Name)}_out.mp4");
+            string outputFile = Path.Combine(intermediateVideo.OriginalVideo.VideoFile.DirectoryName,
+                $"{Path.GetFileNameWithoutExtension(intermediateVideo.OriginalVideo.VideoFile.Name)}_out.mp4");
             var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegParameter.FfmpegBin);
             ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.HardwareAcceleration);
             ffmpegProcessStartInfo.ArgumentList.Add("-y");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-i {video.IntermediateVideo.IntermediateVideoFile.FullName}");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-i {video.VideoFile.FullName}");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-i {intermediateVideo.IntermediateVideoFile?.FullName}");
+            ffmpegProcessStartInfo.ArgumentList.Add($"-i {intermediateVideo.OriginalVideo.VideoFile.FullName}");
             ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegParameter.ConcatVideosParameter);
             ffmpegProcessStartInfo.ArgumentList.Add(outputFile);
             
