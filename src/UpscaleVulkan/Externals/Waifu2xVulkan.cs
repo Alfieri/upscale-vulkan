@@ -51,6 +51,8 @@
         {
             var processStartInfo = new ProcessStartInfo("bash")
             {
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
                 UseShellExecute = false,
                 WorkingDirectory = this._waifu2XSettings.WorkingDir,
                 Arguments = $"-c \"{this._waifu2XSettings.Executable} "

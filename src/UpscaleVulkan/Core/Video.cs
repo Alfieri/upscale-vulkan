@@ -11,9 +11,9 @@
 
         private double _framerate = 29.97;
 
-        private List<Frame> _frames;
+        private List<Frame> _frames = new List<Frame>();
 
-        private List<ScaledFrame> _scaledFrames = new List<ScaledFrame>();
+        private readonly List<ScaledFrame> _scaledFrames = new List<ScaledFrame>();
         
         private IntermediateVideo intermediateVideo;
 
@@ -34,7 +34,8 @@
 
         public async Task ExtractFramesFromVideo(IVideoConverter videoConverter)
         {
-            this._frames = await videoConverter.ExtractFrames(this);
+            List<Frame> extractFrames = await videoConverter.ExtractFrames(this);
+            this._frames.AddRange(extractFrames);
         }
 
         public async Task Upscale(IWaifu2x waifu2X)

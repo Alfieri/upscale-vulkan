@@ -4,6 +4,6 @@
 
     public class UpscaleSettings
     {
-        public string VideoFile { get; set; }
+        public string? VideoFile { get; set; }
     }
 }
