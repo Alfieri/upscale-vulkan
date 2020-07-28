@@ -1,7 +1,5 @@
 ﻿namespace UpscaleVulkan.Core
 {
-    using System.Threading.Tasks;
-
     public class Frame
     {
         public Frame(string framePath, string frameName, bool isUpscaled = false)
@@ -11,15 +9,20 @@
             this.IsUpscaled = isUpscaled;
         }
 
-        public string FramePath { get; private set; }
+        public string FramePath { get; }
 
-        public string FrameName { get; private set; }
+        public string FrameName { get; }
 
         public bool IsUpscaled { get; private set; }
 
-        public async Task<ScaledFrame> Upscale(IWaifu2x waifu2X)
+        public void SetToUpscaled()
         {
-            return !this.IsUpscaled ? await waifu2X.Upscale(this) : new ScaledFrame(this);
+            this.IsUpscaled = true;
+        }
+
+        public override string ToString()
+        {
+            return this.FrameName;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace UpscaleVulkan.Dtos
+namespace UpscaleVulkan.Core.Settings
 {
     public class Waifu2xSettings
     {

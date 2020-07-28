@@ -11,5 +11,7 @@ namespace UpscaleVulkan.Core
         Task<FileInfo> CreateVideoFromFrames(double framerate, string scaledInputPath);
         
         Task CreateFinaleVideo(IntermediateVideo intermediateVideo);
+        
+        List<Frame> GetFrames();
     }
 }

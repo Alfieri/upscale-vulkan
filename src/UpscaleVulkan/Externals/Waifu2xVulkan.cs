@@ -1,11 +1,13 @@
 ﻿namespace UpscaleVulkan.Externals
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Core;
-    using Dtos;
+    using Core.Settings;
     using Exceptions;
     using Infrastructure;
     using Microsoft.Extensions.Logging;
@@ -20,7 +22,7 @@
         
         private string _outputPath;
 
-        public Waifu2xVulkan(Waifu2xSettings waifu2XSettings, IFileProxy fileProxy, ILogger<Waifu2xVulkan> logger)
+        public Waifu2xVulkan(UpscaleSettings upscaleSettings, Waifu2xSettings waifu2XSettings, IFileProxy fileProxy, ILogger<Waifu2xVulkan> logger)
         {
             this._waifu2XSettings = waifu2XSettings;
             this._fileProxy = fileProxy;
@@ -30,48 +32,46 @@
                 throw new ArgumentNullException(nameof(waifu2XSettings.OutputPath));
             }
             
-            this._outputPath = waifu2XSettings.OutputPath;
+            this._outputPath = Path.Combine(upscaleSettings.TempPath, waifu2XSettings.OutputPath);
         }
 
         public async Task<ScaledFrame> Upscale(Frame frame)
         {
-            string outputFile = Path.Combine(this._outputPath, frame.FrameName);
+            string outputFile = this.CreateScaledFrameFullName(frame);
             string inputFile = Path.Combine(frame.FramePath, frame.FrameName);
 
-            bool scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
-            if (!scaledFrameExists)
+            var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
+            this._logger.LogInformation($"{processStartInfo.FileName} {processStartInfo.Arguments}");
+            var process = new Process {StartInfo = processStartInfo};
+            process.ErrorDataReceived += (sender, args) => this._logger.LogError($"Waifu2x Vulkan output: {args.Data}");
+            process.OutputDataReceived +=
+                (sender, args) => this._logger.LogDebug($"Waifu2x Vulkan output: {args.Data}");
+            process.Start();
+            if (process == null)
             {
-                var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
-                this._logger.LogInformation($"{processStartInfo.FileName} {processStartInfo.Arguments}");
-                var process = new Process { StartInfo = processStartInfo };
-                process.ErrorDataReceived += (sender, args) => this._logger.LogError($"Waifu2x Vulkan output: {args.Data}");
-                process.OutputDataReceived += (sender, args) => this._logger.LogDebug($"Waifu2x Vulkan output: {args.Data}");
-                process.Start();
-                if (process == null)
-                {
-                    throw new ScalingFailedException("could not start Waifu2x Vulkan.");
-                }
-                
-                process.WaitForExit();
-                if (process.ExitCode > 0)
-                {
-                    process.BeginErrorReadLine();
-                }
+                throw new ScalingFailedException("could not start Waifu2x Vulkan.");
+            }
 
-                process.BeginOutputReadLine();
-            }
-            else
+            process.WaitForExit();
+            if (process.ExitCode > 0)
             {
-                this._logger.LogInformation($"{outputFile} scaled frame exists");
+                process.BeginErrorReadLine();
             }
-            
-            scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
+
+            process.BeginOutputReadLine();
+
+            bool scaledFrameExists = await this._fileProxy.ExistsAsync(outputFile);
             if (scaledFrameExists)
             {
-                return new ScaledFrame(frame);
+                return new ScaledFrame(this._outputPath, frame.FrameName);
             }
 
             throw new ScalingFailedException("Upscaled frame could not be found.");
+        }
+
+        public Task<bool> IsAlreadyUpscaled(Frame frame)
+        {
+            return this._fileProxy.ExistsAsync(this.CreateScaledFrameFullName(frame));
         }
 
         private ProcessStartInfo CreateProcessStartInfo(string inputFile, string outputFile)
@@ -109,6 +109,11 @@
             {
                 processStartInfo.Arguments += $"-n {waifu2XSettings.NoiseLevel} ";
             }
+        }
+
+        private string CreateScaledFrameFullName(Frame frame)
+        {
+            return Path.Combine(this._outputPath, frame.FrameName);
         }
     }
 }

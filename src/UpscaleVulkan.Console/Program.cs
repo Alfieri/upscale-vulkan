@@ -4,7 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Core;
-    using Dtos;
+    using Core.Settings;
     using Externals;
     using Infrastructure;
     using Microsoft.Extensions.Configuration;
@@ -65,9 +65,8 @@
             serviceCollection.AddSingleton<IConfigurationRoot>(configuration);
 
             serviceCollection.AddSingleton<UpscaleSettings>(configuration.GetSection("upscale").Get<UpscaleSettings>());
-            serviceCollection.AddSingleton<FfmpegParameter>(configuration.GetSection("ffmpeg").Get<FfmpegParameter>());
+            serviceCollection.AddSingleton<FfmpegSettings>(configuration.GetSection("ffmpeg").Get<FfmpegSettings>());
             serviceCollection.AddSingleton<Waifu2xSettings>(configuration.GetSection("waifu2xvulkan").Get<Waifu2xSettings>());
-            serviceCollection.AddSingleton<IUpscaler, Upscaler>();
             serviceCollection.AddSingleton<IWaifu2x, Waifu2xVulkan>();
             serviceCollection.AddSingleton<IVideoConverter, Ffmpeg>();
             serviceCollection.AddSingleton<IFileProxy, File>();

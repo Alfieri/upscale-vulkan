@@ -1,11 +1,10 @@
-namespace UpscaleVulkan.Dtos
+namespace UpscaleVulkan.Core.Settings
 {
-    public class FfmpegParameter
+    public class FfmpegSettings
     {
         public string? FfmpegBin { get; set; }
-        
-        public string? TempPath { get; set; }
 
+        public string? FramesPath { get; set; }
         public string? HardwareAcceleration { get; set; }
 
         public string? Codec { get; set; }
