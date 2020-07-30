@@ -1,6 +1,7 @@
 ﻿namespace UpscaleVulkan.Core
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -52,21 +53,24 @@
                 this._frames.AddRange(extractFrames);
             }
 
+            var stopwatch = new Stopwatch();
             List<Frame> processableFrames = this._frames.Where(f => f.IsUpscaled == false).OrderBy(f => f.FrameName).ToList();
             for (int index = 0; index < processableFrames.Count; index++)
             {
-                Task<ScaledFrame> t1 = waifu2X.Upscale(processableFrames[index]);
+                var f1 = processableFrames[index];
                 index++;
-                Task<ScaledFrame> t2 = waifu2X.Upscale(processableFrames[index]);
-                index++;
-                Task<ScaledFrame> t3 = waifu2X.Upscale(processableFrames[index]);
-                index++;
-                Task<ScaledFrame> t4 = waifu2X.Upscale(processableFrames[index]);
-                await Task.WhenAll(t1, t2, t3, t4);
+                var f2 = processableFrames[index];
+                stopwatch.Start();
+                Task<ScaledFrame> t1 = Task.Run(() => waifu2X.Upscale(f1));
+                await Task.Delay(300);
+                Task<ScaledFrame> t2 = Task.Run(() => waifu2X.Upscale(f2));
+                
+                await Task.WhenAll(t1, t2);
+                stopwatch.Stop();
+                this._logger.LogInformation($"upscaling time: {stopwatch.ElapsedMilliseconds}ms");
+                stopwatch.Reset();
                 this.ScaledFrames.Add(t1.Result);
                 this.ScaledFrames.Add(t2.Result);
-                this.ScaledFrames.Add(t3.Result);
-                this.ScaledFrames.Add(t4.Result);
             }
 
             var intermediateVideo = new IntermediateVideo(this);
