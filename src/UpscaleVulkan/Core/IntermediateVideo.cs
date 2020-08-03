@@ -16,14 +16,8 @@ namespace UpscaleVulkan.Core
 
         public Video OriginalVideo => this._video;
         
-        public async Task CreateVideoFromUpscaledFrames(IVideoConverter videoConverter)
+        public async Task CreateVideoFromUpscaledFrames(IVideoConverter videoConverter, string scaledPath)
         {
-            if (this._video.ScaledFrames.Count <= 0)
-            {
-                return;
-            }
-            
-            string scaledPath = this._video.ScaledFrames[0].FramePath; 
             this.IntermediateVideoFile = await videoConverter.CreateVideoFromFrames(this._video.Framerate, scaledPath);
         }
         
