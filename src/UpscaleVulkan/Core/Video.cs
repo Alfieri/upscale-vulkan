@@ -62,13 +62,13 @@
                 }
                 
                 stopwatch.Start();
-                Task t1 = Task.Run(() => waifu2X.Upscale(this.SaveGetNextFrame(processableFrames, processingIndex)));
+                Task t1 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.Delay(500);
-                Task t2 = Task.Run(() => waifu2X.Upscale(this.SaveGetNextFrame(processableFrames, processingIndex)));
+                Task t2 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.Delay(300);
-                Task t3 = Task.Run(() => waifu2X.Upscale(this.SaveGetNextFrame(processableFrames, processingIndex)));
+                Task t3 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.WhenAll(t1, t2);
                 stopwatch.Stop();
@@ -79,6 +79,21 @@
             var intermediateVideo = new IntermediateVideo(this);
             await intermediateVideo.CreateVideoFromUpscaledFrames(videoConverter, waifu2X.GetScaledPath());
             await intermediateVideo.CreateFinaleVideo(videoConverter);
+        }
+
+        private Task SaveUpscaleFrame(IWaifu2x waifu2X, List<Frame> processableFrames, int processingIndex)
+        {
+            try
+            {
+                Frame nextFrame = this.SaveGetNextFrame(processableFrames, processingIndex);
+                return waifu2X.Upscale(nextFrame);
+            }
+            catch (InvalidFrameAccessException)
+            {
+                this._logger.LogInformation("Upscaling done");
+            }
+
+            return Task.CompletedTask;
         }
 
         private Frame SaveGetNextFrame(List<Frame> processableFrames, in int processingIndex)
