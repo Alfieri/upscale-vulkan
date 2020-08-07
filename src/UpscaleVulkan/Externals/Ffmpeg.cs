@@ -43,9 +43,9 @@
             {
                 var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
                 ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
-                ffmpegProcessStartInfo.Arguments += $"-i {video.VideoFile.FullName} ";
+                ffmpegProcessStartInfo.Arguments += $"-i \"{video.VideoFile.FullName}\" ";
                 ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.VideoToFramesPixFormat} ";
-                ffmpegProcessStartInfo.Arguments += $"{this._framesOutputDir}/%07d.png";
+                ffmpegProcessStartInfo.Arguments += $"\"{this._framesOutputDir}/%07d.png\"";
                 Process ffmpegProcess = Process.Start(ffmpegProcessStartInfo);
                 ffmpegProcess?.WaitForExit();  
             }
@@ -80,13 +80,13 @@
             ffmpegProcessStartInfo.Arguments += "-y ";
             ffmpegProcessStartInfo.Arguments += $"-framerate {this._ffmpegSettings.Framerate} ";
             ffmpegProcessStartInfo.Arguments += "-f image2 ";
-            ffmpegProcessStartInfo.Arguments += $"-i {scaledInputPath}/%07d.png ";
+            ffmpegProcessStartInfo.Arguments += $"-i \"{scaledInputPath}/%07d.png\" ";
             ffmpegProcessStartInfo.Arguments += $"-r {this._ffmpegSettings.Framerate} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.FramesToVideoPixFormat} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Codec} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Preset} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.AdditionalCodecParameter} ";
-            ffmpegProcessStartInfo.Arguments += $"{intermediateVideo}";
+            ffmpegProcessStartInfo.Arguments += $"\"{intermediateVideo}\"";
 
             return Task.Run(() =>
             {
@@ -103,10 +103,10 @@
             var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
             ffmpegProcessStartInfo.Arguments += "-y ";
-            ffmpegProcessStartInfo.Arguments += $"-i {intermediateVideo.IntermediateVideoFile?.FullName} ";
-            ffmpegProcessStartInfo.Arguments += $"-i {intermediateVideo.OriginalVideo.VideoFile.FullName} ";
+            ffmpegProcessStartInfo.Arguments += $"-i \"{intermediateVideo.IntermediateVideoFile?.FullName}\" ";
+            ffmpegProcessStartInfo.Arguments += $"-i \"{intermediateVideo.OriginalVideo.VideoFile.FullName}\" ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.ConcatVideosParameter} ";
-            ffmpegProcessStartInfo.Arguments += outputFile;
+            ffmpegProcessStartInfo.Arguments += $"\"{outputFile}\"";
             
             return Task.Run(() =>
             {
