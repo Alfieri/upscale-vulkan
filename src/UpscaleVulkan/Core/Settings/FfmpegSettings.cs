@@ -4,7 +4,7 @@ namespace UpscaleVulkan.Core.Settings
     {
         public string? FfmpegBin { get; set; }
 
-        public string Framerate { get; set; }
+        public string Framerate { get; set; } = "29.97";
         
         public string? FramesPath { get; set; }
         
