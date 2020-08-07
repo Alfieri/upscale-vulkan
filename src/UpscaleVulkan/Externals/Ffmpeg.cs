@@ -42,10 +42,10 @@
             else
             {
                 var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
-                ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.HardwareAcceleration);
-                ffmpegProcessStartInfo.ArgumentList.Add($"-i {video.VideoFile.FullName}");
-                ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.VideoToFramesPixFormat);
-                ffmpegProcessStartInfo.ArgumentList.Add($"{this._framesOutputDir}/%07d.png");
+                ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
+                ffmpegProcessStartInfo.Arguments += $"-i {video.VideoFile.FullName} ";
+                ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.VideoToFramesPixFormat} ";
+                ffmpegProcessStartInfo.Arguments += $"{this._framesOutputDir}/%07d.png";
                 Process ffmpegProcess = Process.Start(ffmpegProcessStartInfo);
                 ffmpegProcess?.WaitForExit();  
             }
@@ -70,23 +70,23 @@
             return Directory.GetFiles(this._framesOutputDir).Length > 0;
         }
 
-        public Task<FileInfo> CreateVideoFromFrames(double framerate, string scaledInputPath)
+        public Task<FileInfo> CreateVideoFromFrames(string framerate, string scaledInputPath)
         {
             string intermediateVideo =
                 Path.Combine(this._upscaleSettings.TempPath, this._ffmpegSettings.IntermediateVideoFile);
             
             var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.HardwareAcceleration);
-            ffmpegProcessStartInfo.ArgumentList.Add("-y");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-framerate {framerate}");
-            ffmpegProcessStartInfo.ArgumentList.Add("-f image2");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-i {scaledInputPath}");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-r {framerate}");
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.FramesToVideoPixFormat);
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.Codec);
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.Preset);
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.AdditionalCodecParameter);
-            ffmpegProcessStartInfo.ArgumentList.Add(intermediateVideo);
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
+            ffmpegProcessStartInfo.Arguments += "-y ";
+            ffmpegProcessStartInfo.Arguments += $"-framerate {framerate} ";
+            ffmpegProcessStartInfo.Arguments += "-f image2 ";
+            ffmpegProcessStartInfo.Arguments += $"-i {scaledInputPath}/%07d.png ";
+            ffmpegProcessStartInfo.Arguments += $"-r {framerate} ";
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.FramesToVideoPixFormat} ";
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Codec} ";
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Preset} ";
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.AdditionalCodecParameter} ";
+            ffmpegProcessStartInfo.Arguments += $"{intermediateVideo}";
 
             return Task.Run(() =>
             {
@@ -101,12 +101,12 @@
             string outputFile = Path.Combine(intermediateVideo.OriginalVideo.VideoFile.DirectoryName,
                 $"{Path.GetFileNameWithoutExtension(intermediateVideo.OriginalVideo.VideoFile.Name)}_out.mp4");
             var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.HardwareAcceleration);
-            ffmpegProcessStartInfo.ArgumentList.Add("-y");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-i {intermediateVideo.IntermediateVideoFile?.FullName}");
-            ffmpegProcessStartInfo.ArgumentList.Add($"-i {intermediateVideo.OriginalVideo.VideoFile.FullName}");
-            ffmpegProcessStartInfo.ArgumentList.Add(this._ffmpegSettings.ConcatVideosParameter);
-            ffmpegProcessStartInfo.ArgumentList.Add(outputFile);
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
+            ffmpegProcessStartInfo.Arguments += "-y ";
+            ffmpegProcessStartInfo.Arguments += $"-i {intermediateVideo.IntermediateVideoFile?.FullName} ";
+            ffmpegProcessStartInfo.Arguments += $"-i {intermediateVideo.OriginalVideo.VideoFile.FullName} ";
+            ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.ConcatVideosParameter} ";
+            ffmpegProcessStartInfo.Arguments += outputFile;
             
             return Task.Run(() =>
             {

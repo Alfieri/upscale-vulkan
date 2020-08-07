@@ -15,7 +15,7 @@
         private readonly ILogger<Video> _logger;
         private readonly FileInfo _videoFile;
 
-        private double _framerate = 29.97;
+        private string _framerate = "29.97";
 
         private List<Frame> _frames = new List<Frame>();
 
@@ -30,7 +30,7 @@
         
         public FileInfo VideoFile => this._videoFile;
 
-        public double Framerate => this._framerate;
+        public string Framerate => this._framerate;
 
         public async Task Upscale(IWaifu2x waifu2X, IVideoConverter videoConverter)
         {
