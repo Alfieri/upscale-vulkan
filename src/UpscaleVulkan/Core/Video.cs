@@ -1,6 +1,5 @@
 ﻿namespace UpscaleVulkan.Core
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -15,8 +14,6 @@
         private readonly ILogger<Video> _logger;
         private readonly FileInfo _videoFile;
 
-        private string _framerate = "29.97";
-
         private List<Frame> _frames = new List<Frame>();
 
         private bool _resume;
@@ -29,8 +26,6 @@
         }
         
         public FileInfo VideoFile => this._videoFile;
-
-        public string Framerate => this._framerate;
 
         public async Task Upscale(IWaifu2x waifu2X, IVideoConverter videoConverter)
         {

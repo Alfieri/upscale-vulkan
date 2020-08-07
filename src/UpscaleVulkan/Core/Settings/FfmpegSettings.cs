@@ -4,7 +4,10 @@ namespace UpscaleVulkan.Core.Settings
     {
         public string? FfmpegBin { get; set; }
 
+        public string Framerate { get; set; }
+        
         public string? FramesPath { get; set; }
+        
         public string? HardwareAcceleration { get; set; }
 
         public string? Codec { get; set; }

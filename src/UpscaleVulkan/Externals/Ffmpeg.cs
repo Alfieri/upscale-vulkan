@@ -70,7 +70,7 @@
             return Directory.GetFiles(this._framesOutputDir).Length > 0;
         }
 
-        public Task<FileInfo> CreateVideoFromFrames(string framerate, string scaledInputPath)
+        public Task<FileInfo> CreateVideoFromFrames(string scaledInputPath)
         {
             string intermediateVideo =
                 Path.Combine(this._upscaleSettings.TempPath, this._ffmpegSettings.IntermediateVideoFile);
@@ -78,10 +78,10 @@
             var ffmpegProcessStartInfo = new ProcessStartInfo(this._ffmpegSettings.FfmpegBin);
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.HardwareAcceleration} ";
             ffmpegProcessStartInfo.Arguments += "-y ";
-            ffmpegProcessStartInfo.Arguments += $"-framerate {framerate} ";
+            ffmpegProcessStartInfo.Arguments += $"-framerate {this._ffmpegSettings.Framerate} ";
             ffmpegProcessStartInfo.Arguments += "-f image2 ";
             ffmpegProcessStartInfo.Arguments += $"-i {scaledInputPath}/%07d.png ";
-            ffmpegProcessStartInfo.Arguments += $"-r {framerate} ";
+            ffmpegProcessStartInfo.Arguments += $"-r {this._ffmpegSettings.Framerate} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.FramesToVideoPixFormat} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Codec} ";
             ffmpegProcessStartInfo.Arguments += $"{this._ffmpegSettings.Preset} ";

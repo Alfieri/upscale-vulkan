@@ -8,7 +8,7 @@ namespace UpscaleVulkan.Core
     {
         Task<List<Frame>> ExtractFrames(Video video);
         
-        Task<FileInfo> CreateVideoFromFrames(string framerate, string scaledInputPath);
+        Task<FileInfo> CreateVideoFromFrames(string scaledInputPath);
         
         Task CreateFinaleVideo(IntermediateVideo intermediateVideo);
         
