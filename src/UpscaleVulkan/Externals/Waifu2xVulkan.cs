@@ -37,16 +37,17 @@
         {
                 string outputFile = this.CreateScaledFrameFullName(frame);
                 string inputFile = Path.Combine(frame.FramePath, frame.FrameName);
-
+                
                 var processStartInfo = this.CreateProcessStartInfo(inputFile, outputFile);
                 this._logger.LogInformation($"{processStartInfo.FileName} {processStartInfo.Arguments}");
-                var process = new Process {StartInfo = processStartInfo};
-                process.ErrorDataReceived +=
-                    (sender, args) => this._logger.LogError($"Waifu2x Vulkan output: {args.Data}");
-                process.OutputDataReceived +=
-                    (sender, args) => this._logger.LogDebug($"Waifu2x Vulkan output: {args.Data}");
-                await Task.Run(() =>
+                do
                 {
+                    var process = new Process {StartInfo = processStartInfo};
+                    process.ErrorDataReceived +=
+                        (sender, args) => this._logger.LogError($"Waifu2x Vulkan output: {args.Data}");
+                    process.OutputDataReceived +=
+                        (sender, args) => this._logger.LogDebug($"Waifu2x Vulkan output: {args.Data}");
+
                     process.Start();
                     if (process == null)
                     {
@@ -60,7 +61,8 @@
                     }
 
                     process.BeginOutputReadLine();
-                });
+                } while (!await this._fileProxy.ExistsAsync(outputFile));
+
         }
 
         public Task<bool> IsAlreadyUpscaled(Frame frame)

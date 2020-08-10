@@ -59,7 +59,7 @@
                 stopwatch.Start();
                 Task t1 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
-                await Task.Delay(500);
+                await Task.Delay(300);
                 Task t2 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.Delay(300);
