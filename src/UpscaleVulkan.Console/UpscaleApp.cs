@@ -4,6 +4,7 @@ namespace UpscaleVulkan.Console
     using Core;
     using Core.Settings;
     using Microsoft.Extensions.Logging;
+    using Reporting;
 
     public class UpscaleApp
     {
@@ -23,6 +24,7 @@ namespace UpscaleVulkan.Console
         public async Task Run(string[] args)
         {
             var video = new Video(this._upscaleSettings, this._loggerFactory.CreateLogger<Video>());
+            var timeEstimation = new TimeEstimation(video, this._loggerFactory.CreateLogger<TimeEstimation>());
             await video.Upscale(this._waifu2X, this._videoConverter);
         }
     }

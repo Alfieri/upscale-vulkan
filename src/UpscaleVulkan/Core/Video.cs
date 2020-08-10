@@ -1,7 +1,7 @@
 ﻿namespace UpscaleVulkan.Core
 {
+    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -27,6 +27,10 @@
         
         public FileInfo VideoFile => this._videoFile;
 
+        public event EventHandler? ScalingStarted;
+
+        public event EventHandler<ScaleReportingEventArgs>? ScalingFinished;
+
         public async Task Upscale(IWaifu2x waifu2X, IVideoConverter videoConverter)
         {
             if (this._resume)
@@ -46,7 +50,6 @@
                 this._frames.AddRange(extractFrames);
             }
 
-            var stopwatch = new Stopwatch();
             List<Frame> processableFrames = this._frames.Where(f => f.IsUpscaled == false).OrderBy(f => f.FrameName).ToList();
             int processingIndex = 0;
             while (true)
@@ -55,8 +58,8 @@
                 {
                     break;
                 }
-                
-                stopwatch.Start();
+
+                this.OnStartScaling();
                 Task t1 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.Delay(300);
@@ -66,14 +69,22 @@
                 Task t3 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
                 await Task.WhenAll(t1, t2);
-                stopwatch.Stop();
-                this._logger.LogInformation($"upscaling time: {stopwatch.ElapsedMilliseconds}ms");
-                stopwatch.Reset();
+                this.OnScalingFinished(3, processableFrames.Count);
             }
 
             var intermediateVideo = new IntermediateVideo(this);
             await intermediateVideo.CreateVideoFromUpscaledFrames(videoConverter, waifu2X.GetScaledPath());
             await intermediateVideo.CreateFinaleVideo(videoConverter);
+        }
+
+        private void OnScalingFinished(in int batchSize, in int numberOfFrames)
+        {
+            this.ScalingFinished?.Invoke(this, new ScaleReportingEventArgs(batchSize, numberOfFrames));
+        }
+
+        private void OnStartScaling()
+        {
+            this.ScalingStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private Task SaveUpscaleFrame(IWaifu2x waifu2X, List<Frame> processableFrames, int processingIndex)
@@ -100,5 +111,18 @@
 
             return processableFrames[processingIndex];
         }
+    }
+
+    public class ScaleReportingEventArgs
+    {
+        public ScaleReportingEventArgs(int batchSize, int numberOfFrames)
+        {
+            this.BatchSize = batchSize;
+            this.NumberOfFrames = numberOfFrames;
+        }
+        
+        public int BatchSize { get; }
+
+        public int NumberOfFrames { get; }
     }
 }
