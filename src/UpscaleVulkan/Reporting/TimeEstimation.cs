@@ -19,7 +19,7 @@ namespace UpscaleVulkan.Reporting
         private void OnScalingFinished(object sender, ScaleReportingEventArgs e)
         {
             var batchTime = DateTime.Now - this._scaleStartTime;
-            TimeSpan estimatedTime = (e.NumberOfFrames / e.BatchSize) * batchTime;
+            TimeSpan estimatedTime = ((e.NumberOfFrames - e.CurrentFrame) / e.BatchSize) * batchTime;
             this._logger.LogInformation($"upscaling frames takes {batchTime}");
             this._logger.LogInformation($"Scaling finished in {estimatedTime}");
         }

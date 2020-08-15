@@ -62,14 +62,17 @@
                 this.OnStartScaling();
                 Task t1 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
-                await Task.Delay(300);
+                await Task.Delay(200);
                 Task t2 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
-                await Task.Delay(300);
+                await Task.Delay(400);
                 Task t3 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
                 processingIndex++;
-                await Task.WhenAll(t1, t2);
-                this.OnScalingFinished(3, processableFrames.Count);
+                await Task.Delay(200);
+                Task t4 = Task.Run(() => this.SaveUpscaleFrame(waifu2X, processableFrames, processingIndex));
+                processingIndex++;
+                await Task.WhenAll(t1, t2, t3, t4);
+                this.OnScalingFinished(4, processableFrames.Count, processingIndex);
             }
 
             var intermediateVideo = new IntermediateVideo(this);
@@ -77,9 +80,9 @@
             await intermediateVideo.CreateFinaleVideo(videoConverter);
         }
 
-        private void OnScalingFinished(in int batchSize, in int numberOfFrames)
+        private void OnScalingFinished(in int batchSize, in int numberOfFrames, int currentFrame)
         {
-            this.ScalingFinished?.Invoke(this, new ScaleReportingEventArgs(batchSize, numberOfFrames));
+            this.ScalingFinished?.Invoke(this, new ScaleReportingEventArgs(batchSize, numberOfFrames, currentFrame));
         }
 
         private void OnStartScaling()
@@ -115,14 +118,17 @@
 
     public class ScaleReportingEventArgs
     {
-        public ScaleReportingEventArgs(int batchSize, int numberOfFrames)
+        public ScaleReportingEventArgs(int batchSize, int numberOfFrames, int currentFrame)
         {
             this.BatchSize = batchSize;
             this.NumberOfFrames = numberOfFrames;
+            this.CurrentFrame = currentFrame;
         }
         
         public int BatchSize { get; }
 
         public int NumberOfFrames { get; }
+        
+        public int CurrentFrame { get; }
     }
 }
