@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan", "src\Upscal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Console", "src\UpscaleVulkan.Console\UpscaleVulkan.Console.csproj", "{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Web", "src\UpscaleVulkan.Web\UpscaleVulkan.Web.csproj", "{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,9 +48,22 @@ Global
 		{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}.Release|x64.Build.0 = Release|Any CPU
 		{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}.Release|x86.ActiveCfg = Release|Any CPU
 		{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}.Release|x86.Build.0 = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|x64.Build.0 = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{086A9381-2ABC-4813-86F9-9556BE986F73} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
 		{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
+		{8E6BBDC8-4C87-41EF-928B-F52CC83E5B1F} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
 	EndGlobalSection
 EndGlobal
