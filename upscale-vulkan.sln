@@ -5,11 +5,13 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan", "src\UpscaleVulkan\UpscaleVulkan.csproj", "{086A9381-2ABC-4813-86F9-9556BE986F73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Core", "src\UpscaleVulkan.Core\UpscaleVulkan.Core.csproj", "{086A9381-2ABC-4813-86F9-9556BE986F73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Console", "src\UpscaleVulkan.Console\UpscaleVulkan.Console.csproj", "{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Web", "src\UpscaleVulkan.Web\UpscaleVulkan.Web.csproj", "{D9783598-5D0B-439F-9C28-D47DE8C612C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Application", "src\UpscaleVulkan.Application\UpscaleVulkan.Application.csproj", "{A247C7ED-686A-4071-ADF4-3D590EA376E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,10 +62,23 @@ Global
 		{D9783598-5D0B-439F-9C28-D47DE8C612C6}.Release|x64.Build.0 = Release|Any CPU
 		{D9783598-5D0B-439F-9C28-D47DE8C612C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{D9783598-5D0B-439F-9C28-D47DE8C612C6}.Release|x86.Build.0 = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|x64.Build.0 = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Debug|x86.Build.0 = Debug|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|x64.ActiveCfg = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|x64.Build.0 = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{086A9381-2ABC-4813-86F9-9556BE986F73} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
 		{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
 		{D9783598-5D0B-439F-9C28-D47DE8C612C6} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
+		{A247C7ED-686A-4071-ADF4-3D590EA376E5} = {51FA5441-DF8D-4ACD-8CF2-154EE8B0207B}
 	EndGlobalSection
 EndGlobal
