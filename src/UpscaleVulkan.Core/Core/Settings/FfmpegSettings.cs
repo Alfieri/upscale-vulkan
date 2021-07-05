@@ -2,26 +2,28 @@ namespace UpscaleVulkan.Core.Settings
 {
     public class FfmpegSettings
     {
-        public string? FfmpegBin { get; set; }
-
+        public string? FfmpegBin { get; set; } = "/usr/bin/ffmpeg";
+        
         public string Framerate { get; set; } = "29.97";
         
         public string? FramesPath { get; set; }
-        
-        public string? HardwareAcceleration { get; set; }
 
-        public string? Codec { get; set; }
+        public string? HardwareAcceleration { get; set; } = "auto";
 
-        public string? Preset { get; set; }
+        public string? Codec { get; set; } = "h264_nvenc";
 
-        public string? AdditionalCodecParameter { get; set; }
-        
-        public string? IntermediateVideoFile { get; set; }
+        public string? Preset { get; set; } = "slow";
 
-        public string? VideoToFramesPixFormat { get; set; }
+        public string? AdditionalCodecParameter { get; set; } =
+            "-profile:v high -rc:v vbr_hq -qmin:v 19 -qmax:v 21 -b:v 2500k -maxrate:v 5000k -bufsize:v 5000k -bf:v 4";
 
-        public string? FramesToVideoPixFormat { get; set; }
-        
-        public string? ConcatVideosParameter { get; set; }
+        public string? IntermediateVideoFile { get; set; } = "intermediate.mp4";
+
+        public string? VideoToFramesPixFormat { get; set; } = "rgba64be";
+
+        public string? FramesToVideoPixFormat { get; set; } = "yuv420p";
+
+        public string? ConcatVideosParameter { get; set; } =
+            "-map 0:v -map 1:a? -map 1:s? -map 1:d? -map 1:t? -c copy -map_metadata 0";
     }
 }

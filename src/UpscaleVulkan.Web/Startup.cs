@@ -11,6 +11,7 @@ namespace UpscaleVulkan.Web
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Services;
 
     public class Startup
     {
@@ -27,6 +28,8 @@ namespace UpscaleVulkan.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddSingleton<ISettingsService, SettingsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

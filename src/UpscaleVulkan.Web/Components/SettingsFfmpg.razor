@@ -1,31 +1,76 @@
+@using UpscaleVulkan.Web.Services
+@using UpscaleVulkan.Core.Settings
 @inherits ComponentBase
+@inject ISettingsService settingsService;
 
+<EditForm EditContext="@editContext" OnSubmit="@SaveSettings">
 <div class="card">
   <div class="card-header">
-      FFMpeg Settings
-    </div>
+    FFMpeg Settings
+  </div>
   <div class="card-body">
     <h5 class="card-title">FFMpeg Settings</h5>
-    @* <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> *@
     <form>
       <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label>FFMpeg binary Path</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.FfmpegBin" />
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        <label>Framerate</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.Framerate" />
       </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+      <div class="form-group">
+        <label>HW Acceleration</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.HardwareAcceleration" />
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="form-group">
+        <label>Video Codec</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.Codec" />
+      </div>
+      <div class="form-group">
+        <label>Preset</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.Preset" />
+      </div>
+      <div class="form-group">
+        <label>Additional Video Codec Parameter</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.AdditionalCodecParameter" />
+      </div>
+      <div class="form-group">
+        <label>Intermediate Video file name</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.IntermediateVideoFile" />
+      </div>
+      <div class="form-group">
+        <label>Frames Pixel Format</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.VideoToFramesPixFormat" />
+      </div>
+      <div class="form-group">
+        <label>Video Pixel Format</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.FramesToVideoPixFormat" />
+      </div>
+      <div class="form-group">
+        <label>Concat Parameters</label>
+        <InputText class="form-control" placeholder="binary Path" @bind-Value="settings.ConcatVideosParameter" />
+      </div>
+      
+      <button class="btn btn-primary" type="submit">Save</button>
     </form>
   </div>
 </div>
+</EditForm>
 
 @code {
+  private EditContext editContext;
+  private FfmpegSettings settings;
+
+  protected override async Task OnInitializedAsync()
+  {
+    this.settings = await this.settingsService.LoadSettings<FfmpegSettings>();
     
+    this.editContext = new EditContext(settings);
+  }
+
+  private void SaveSettings()
+  {
+  }
+
 }
