@@ -6,8 +6,6 @@ namespace UpscaleVulkan.Core.Settings
         
         public string Framerate { get; set; } = "29.97";
         
-        public string? FramesPath { get; set; }
-
         public string? HardwareAcceleration { get; set; } = "auto";
 
         public string? Codec { get; set; } = "h264_nvenc";

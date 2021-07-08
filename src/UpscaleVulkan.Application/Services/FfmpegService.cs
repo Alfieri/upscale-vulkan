@@ -9,19 +9,19 @@
     using Core.Settings;
     using Microsoft.Extensions.Logging;
 
-    public class Ffmpeg : IVideoConverter
+    public class FfmpegService : IVideoConverter
     {
         private readonly UpscaleSettings upscaleSettings;
         private readonly FfmpegSettings ffmpegSettings;
-        private readonly ILogger<Ffmpeg> logger;
+        private readonly ILogger<FfmpegService> logger;
         private readonly string framesOutputDir;
 
-        public Ffmpeg(ISettingsService settingsService, ILogger<Ffmpeg> logger)
+        public FfmpegService(ISettingsService settingsService, ILogger<FfmpegService> logger)
         {
             this.logger = logger;
             this.ffmpegSettings = settingsService.LoadSettingsAsync<FfmpegSettings>().Result;
             this.upscaleSettings = settingsService.LoadSettingsAsync<UpscaleSettings>().Result;
-            this.framesOutputDir = Path.Combine(this.upscaleSettings.TempPath, this.ffmpegSettings.FramesPath);
+            this.framesOutputDir = Path.Combine(this.upscaleSettings.TempPath, this.upscaleSettings.FramesPath);
             if (!Directory.Exists(this.framesOutputDir))
             {
                 Directory.CreateDirectory(this.framesOutputDir);

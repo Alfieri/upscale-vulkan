@@ -11,7 +11,7 @@ namespace UpscaleVulkan.Web
         {
             services.AddSingleton<IUpscaleService, UpscaleService>();
             services.AddSingleton<ISettingsService, SettingsService>();
-            services.AddSingleton<IVideoConverter, Ffmpeg>();
+            services.AddSingleton<IVideoConverter, FfmpegService>();
             services.AddSingleton<IWaifu2x, Waifu2xVulkan>();
             services.AddSingleton<IFileProxy, File>();
             
