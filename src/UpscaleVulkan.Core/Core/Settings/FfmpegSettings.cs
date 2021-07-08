@@ -15,7 +15,7 @@ namespace UpscaleVulkan.Core.Settings
         public string? Preset { get; set; } = "slow";
 
         public string? AdditionalCodecParameter { get; set; } =
-            "-profile:v high -rc:v vbr_hq -qmin:v 19 -qmax:v 21 -b:v 2500k -maxrate:v 5000k -bufsize:v 5000k -bf:v 4";
+            "-profile:v high -tune:v hq -rc:v vbr -cq:v 19 -qmin 18 -qmax 24 -b:v 2500k -maxrate:v 5000k -bufsize:v 5000k -bf:v 4";
 
         public string? IntermediateVideoFile { get; set; } = "intermediate.mp4";
 
