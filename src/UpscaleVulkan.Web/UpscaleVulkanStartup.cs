@@ -1,5 +1,6 @@
 namespace UpscaleVulkan.Web
 {
+    using Application.Infrastructure;
     using Application.Persistence;
     using Application.Services;
     using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,14 @@ namespace UpscaleVulkan.Web
     {
         public static IServiceCollection AddUpscaleVulkanServices(this IServiceCollection services)
         {
+            services.AddSingleton<IUpscaleService, UpscaleService>();
             services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IVideoConverter, Ffmpeg>();
+            services.AddSingleton<IWaifu2x, Waifu2xVulkan>();
+            services.AddSingleton<IFileProxy, File>();
+            
             services.AddSingleton<ISettingsRepository, SettingsRepository>();
+            
             
             return services;
         }

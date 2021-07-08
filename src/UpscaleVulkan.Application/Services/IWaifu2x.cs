@@ -1,6 +1,7 @@
-namespace UpscaleVulkan.Core
+namespace UpscaleVulkan.Application.Services
 {
     using System.Threading.Tasks;
+    using Core;
 
     public interface IWaifu2x
     {

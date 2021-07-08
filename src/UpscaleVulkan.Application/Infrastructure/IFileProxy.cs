@@ -1,4 +1,4 @@
-namespace UpscaleVulkan.Infrastructure
+namespace UpscaleVulkan.Application.Infrastructure
 {
     using System.Threading.Tasks;
 

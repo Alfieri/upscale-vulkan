@@ -2,22 +2,22 @@
 {
     public class Frame
     {
-        public Frame(string framePath, string frameName, bool isUpscaled = false)
+        public Frame(string framePath, string frameName, bool isAlreadyScaled = false)
         {
             this.FrameName = frameName;
             this.FramePath = framePath;
-            this.IsUpscaled = isUpscaled;
+            this.IsAlreadyScaled = isAlreadyScaled;
         }
 
         public string FramePath { get; }
 
         public string FrameName { get; }
 
-        public bool IsUpscaled { get; private set; }
+        public bool IsAlreadyScaled { get; private set; }
 
         public void SetToUpscaled()
         {
-            this.IsUpscaled = true;
+            this.IsAlreadyScaled = true;
         }
 
         public override string ToString()
