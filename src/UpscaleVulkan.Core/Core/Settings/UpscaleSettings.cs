@@ -8,6 +8,6 @@
 
         public string ScaledPath { get; set; } = string.Empty;
 
-        public bool Resume { get; set; }
+        public string FramesPath { get; set; } = string.Empty;
     }
 }
