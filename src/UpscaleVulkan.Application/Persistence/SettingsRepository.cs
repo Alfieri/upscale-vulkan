@@ -41,7 +41,7 @@ namespace UpscaleVulkan.Application.Persistence
 
         private string CreateFileName(MemberInfo settingsType)
         {
-            return Path.Combine(this.appData, settingsType.Name);
+            return $"{Path.Combine(this.appData, settingsType.Name)}.json";
         }
     }
 }
