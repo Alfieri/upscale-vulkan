@@ -11,25 +11,22 @@
 
     public class FfmpegService : IVideoConverter
     {
-        private readonly UpscaleSettings upscaleSettings;
-        private readonly FfmpegSettings ffmpegSettings;
+        private readonly ISettingsService settingsService;
         private readonly ILogger<FfmpegService> logger;
-        private readonly string framesOutputDir;
+        private string framesOutputDir;
+        private FfmpegSettings ffmpegSettings;
+        private UpscaleSettings upscaleSettings;
 
         public FfmpegService(ISettingsService settingsService, ILogger<FfmpegService> logger)
         {
+            this.settingsService = settingsService;
             this.logger = logger;
-            this.ffmpegSettings = settingsService.LoadSettingsAsync<FfmpegSettings>().Result;
-            this.upscaleSettings = settingsService.LoadSettingsAsync<UpscaleSettings>().Result;
-            this.framesOutputDir = Path.Combine(this.upscaleSettings.TempPath, this.upscaleSettings.FramesPath);
-            if (!Directory.Exists(this.framesOutputDir))
-            {
-                Directory.CreateDirectory(this.framesOutputDir);
-            }
         }
 
-        public Task<List<Frame>> ExtractFrames(Video video)
+        public async Task<List<Frame>> ExtractFrames(Video video)
         {
+            await this.Initialize();
+            
             if (this.FramesOutputDirIsNotEmpty())
             {
                 this.logger.LogInformation($"Frames directory is not empty. Delete existing frames first");
@@ -49,11 +46,8 @@
                 Process ffmpegProcess = Process.Start(ffmpegProcessStartInfo);
                 ffmpegProcess?.WaitForExit();  
             }
-            
-            return Task.Run(() =>
-            {
-                return this.GetFrames();
-            });
+
+            return this.GetFrames();
         }
 
         public List<Frame> GetFrames()
@@ -63,6 +57,17 @@
                 var frameFile = new FileInfo(frame);
                 return new Frame(frameFile.DirectoryName, frameFile.Name);
             }).OrderBy(f => f.FrameName).ToList();
+        }
+
+        private async Task Initialize()
+        {
+            this.ffmpegSettings = await this.settingsService.LoadSettingsAsync<FfmpegSettings>();
+            this.upscaleSettings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
+            this.framesOutputDir = Path.Combine(this.upscaleSettings.TempPath, this.upscaleSettings.FramesPath);
+            if (!Directory.Exists(this.framesOutputDir))
+            {
+                Directory.CreateDirectory(this.framesOutputDir);
+            }
         }
 
         private bool FramesOutputDirIsNotEmpty()

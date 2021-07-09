@@ -1,6 +1,26 @@
-@page "/Upscale"
-<h3>Upscale</h3>
+@page "/upscale"
+@using UpscaleVulkan.Application.Services
+@using UpscaleVulkan.Core.Settings
+@inject ISettingsService settingsService
+@inject IUpscaleService upscaleService
+
+@if (string.IsNullOrEmpty(this.UpscaleSettings.VideoFile))
+{
+    <div class="alert alert-danger" role="alert">
+        Please go to settings and choose a file
+    </div>
+}
+else
+{
+    <h5>Upscale video @this.UpscaleSettings.VideoFile</h5>
+}
 
 @code {
-    
+    private UpscaleSettings UpscaleSettings { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.UpscaleSettings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
+    }
+
 }
