@@ -4,9 +4,12 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Core;
+    using Core.MediaInfo;
     using Core.Settings;
+    using Helpers;
     using Microsoft.Extensions.Logging;
 
     public class FfmpegService : IVideoConverter
@@ -21,6 +24,21 @@
         {
             this.settingsService = settingsService;
             this.logger = logger;
+        }
+
+        public async Task<FfprobeJson> GetVideoInfo(Video video)
+        {
+            await this.Initialize();
+            ProcessResult processResult = await ProcessAsyncHelper.RunProcessAsync(this.ffmpegSettings.FfprobBin,
+                $"-v quiet -print_format json -show_format -show_streams {video.VideoFile.FullName}", 5000);
+            
+            if (processResult.ExitCode > 0)
+            {
+                this.logger.LogError(processResult.Error);
+                return new FfprobeJson();
+            }
+
+            return JsonSerializer.Deserialize<FfprobeJson>(processResult.Output);
         }
 
         public async Task<List<Frame>> ExtractFrames(Video video)
@@ -44,7 +62,7 @@
                 ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.VideoToFramesPixFormat} ";
                 ffmpegProcessStartInfo.Arguments += $"\"{this.framesOutputDir}/%07d.png\"";
                 Process ffmpegProcess = Process.Start(ffmpegProcessStartInfo);
-                ffmpegProcess?.WaitForExit();  
+                await ffmpegProcess?.WaitForExitAsync();  
             }
 
             return this.GetFrames();

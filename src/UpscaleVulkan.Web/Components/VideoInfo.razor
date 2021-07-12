@@ -1,0 +1,51 @@
+@using UpscaleVulkan.Application.Services
+@using UpscaleVulkan.Core
+@using UpscaleVulkan.Core.MediaInfo
+@inherits ComponentBase
+@inject IVideoConverter ffmpegService
+
+<div class="card">
+  <div class="card-header">
+    @videoInfo?.Format?.Filename
+  </div>
+  @if (videoStream is null)
+  {
+    <div class="alert alert-danger" role="alert">
+     The video has no Video stream
+   </div>
+  }
+  else
+  {
+    <div class="card-body">
+      <h5 class="card-title">Video stream informations</h5>
+      <p class="card-text">Bitrate: @videoStream.BitRate || Codec: @videoStream.CodecName || Pix format: @videoStream.PixFormat</p>
+      <p class="card-text">Length: @duration || Framerate: @videoStream.Framerate || #Frames: @videoStream.NumberOfFrames</p>
+    </div>
+  }
+</div>
+
+
+@code {
+
+  private FfprobeJson videoInfo { get; set; } = new();
+
+  private StreamInfo? videoStream;
+
+  private string duration = string.Empty;
+
+  [Parameter]
+  public Video Video { get; set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    this.videoInfo = await this.ffmpegService.GetVideoInfo(Video);
+    var t = TimeSpan.FromMilliseconds(double.Parse(this.videoInfo.Format.DurationInMilliseconds ?? "0"));
+    this.duration = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms", 
+                        t.Hours, 
+                        t.Minutes, 
+                        t.Seconds, 
+                        t.Milliseconds);
+    this.videoStream = videoInfo.Streams.FirstOrDefault(s => s.CodecType?.Equals(CodecType.Video) ?? false);
+  }
+
+}

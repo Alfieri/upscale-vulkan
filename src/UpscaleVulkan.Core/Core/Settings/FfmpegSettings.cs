@@ -4,6 +4,8 @@ namespace UpscaleVulkan.Core.Settings
     {
         public string? FfmpegBin { get; set; } = "/usr/bin/ffmpeg";
         
+        public string? FfprobBin { get; set; } = "/usr/bin/ffprobe";
+        
         public string Framerate { get; set; } = "29.97";
         
         public string? HardwareAcceleration { get; set; } = "auto";

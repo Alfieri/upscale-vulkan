@@ -4,6 +4,7 @@ namespace UpscaleVulkan.Application.Services
     using System.IO;
     using System.Threading.Tasks;
     using Core;
+    using Core.MediaInfo;
 
     public interface IVideoConverter
     {
@@ -14,5 +15,6 @@ namespace UpscaleVulkan.Application.Services
         Task CreateFinaleVideo(IntermediateVideo intermediateVideo);
         
         List<Frame> GetFrames();
+        Task<FfprobeJson> GetVideoInfo(Video video);
     }
 }
