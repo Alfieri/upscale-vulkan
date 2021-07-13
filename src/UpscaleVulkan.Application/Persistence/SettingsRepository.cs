@@ -16,7 +16,7 @@ namespace UpscaleVulkan.Application.Persistence
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData,
                         Environment.SpecialFolderOption.DoNotVerify), "upscale.vulkan");
-            Directory.CreateDirectory(appData);
+            Directory.CreateDirectory(this.appData);
         }
 
         public async Task<TSettings?> LoadSettingsAsync<TSettings>()

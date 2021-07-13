@@ -11,7 +11,7 @@
     {
         public string RequestId { get; private set; } = null!;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
 
         private readonly ILogger<ErrorModel> logger;
 
@@ -22,7 +22,7 @@
 
         public void OnGet()
         {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            this.RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier;
         }
     }
 }
