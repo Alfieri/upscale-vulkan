@@ -1,3 +1,5 @@
+using UpscaleVulkan.Web.Services;
+
 namespace UpscaleVulkan.Web
 {
     using Application.Infrastructure;
@@ -8,6 +10,20 @@ namespace UpscaleVulkan.Web
     public static class UpscaleVulkanStartup
     {
         public static IServiceCollection AddUpscaleVulkanServices(this IServiceCollection services)
+        {
+            services.AddApplicationServices();
+
+            return services;
+        }
+
+        private static IServiceCollection AddViewServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IVideoInfoService, VideoInfoService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<IUpscaleService, UpscaleService>();
             services.AddSingleton<ISettingsService, SettingsService>();
