@@ -1,9 +1,3 @@
-@using UpscaleVulkan.Core.Settings
-@using UpscaleVulkan.Application.Services
-@using Microsoft.AspNetCore.Components
-@inherits ComponentBase
-@inject ISettingsService settingsService;
-
 <EditForm Model="@settings" OnSubmit="@SaveSettings">
   <div class="card">
     <div class="card-header">
@@ -33,18 +27,3 @@
     </div>
   </div>
 </EditForm>
-
-@code {
-  private UpscaleSettings settings = new();
-
-  protected override async Task OnInitializedAsync()
-  {
-    this.settings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
-  }
-
-  private async Task SaveSettings()
-  {
-    await this.settingsService.SaveSettingsAsync(this.settings);
-  }
-
-}
