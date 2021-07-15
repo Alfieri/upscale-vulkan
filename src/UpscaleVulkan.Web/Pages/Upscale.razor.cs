@@ -1,13 +1,18 @@
-﻿namespace UpscaleVulkan.Web.Pages
+﻿using UpscaleVulkan.Web.Model;
+
+namespace UpscaleVulkan.Web.Pages
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
     using Core;
     using Core.Settings;
     using Application.Services;
+    using Model;
     
     public partial class Upscale
     {
+        private ComponentState state = ComponentState.Error;
+        
         private UpscaleSettings upscaleSettings { get; set; } = new();
 
         private Video video { get; set; }
@@ -21,7 +26,11 @@
         protected override async Task OnInitializedAsync()
         {
             this.upscaleSettings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
-            this.video = new Video(this.upscaleSettings.VideoFile);
+            if (!string.IsNullOrEmpty(this.upscaleSettings.VideoFile))
+            {
+                this.video = new Video(this.upscaleSettings.VideoFile);
+                this.state = ComponentState.Content;
+            }
         }
 
         private async Task StartUpscaling()

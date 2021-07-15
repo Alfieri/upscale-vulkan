@@ -11,6 +11,7 @@ namespace UpscaleVulkan.Web
     {
         public static IServiceCollection AddUpscaleVulkanServices(this IServiceCollection services)
         {
+            services.AddViewServices();
             services.AddApplicationServices();
 
             return services;
