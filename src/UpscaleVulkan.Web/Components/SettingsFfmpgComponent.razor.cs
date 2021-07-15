@@ -5,16 +5,16 @@
     using Application.Services;
     using Core.Settings;
     
-    public partial class SettingsGeneral : ComponentBase
+    public partial class SettingsFfmpgComponent : ComponentBase
     {
-        private UpscaleSettings settings = new();
+        private FfmpegSettings settings = new();
         
         [Inject]
         private ISettingsService settingsService { get; set; }
-
+        
         protected override async Task OnInitializedAsync()
         {
-            this.settings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
+            this.settings = await this.settingsService.LoadSettingsAsync<FfmpegSettings>();
         }
 
         private async Task SaveSettings()

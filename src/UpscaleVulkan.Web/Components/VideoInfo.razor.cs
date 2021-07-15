@@ -11,7 +11,7 @@
     
     public partial class VideoInfo : ComponentBase
     {
-        private StreamInfo? videoStream;
+        private StreamInfo videoStream;
 
         private string duration = string.Empty;
 

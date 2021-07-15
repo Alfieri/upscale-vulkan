@@ -5,7 +5,7 @@ using UpscaleVulkan.Core.Settings;
 
 namespace UpscaleVulkan.Web.Components
 {
-    public partial class SettingsWaifu2x : ComponentBase
+    public partial class SettingsWaifu2xComponent : ComponentBase
     {
         private Waifu2xSettings settings = new();
         

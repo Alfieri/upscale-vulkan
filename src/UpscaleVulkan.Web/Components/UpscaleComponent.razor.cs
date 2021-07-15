@@ -1,6 +1,4 @@
-﻿using UpscaleVulkan.Web.Model;
-
-namespace UpscaleVulkan.Web.Pages
+﻿namespace UpscaleVulkan.Web.Components
 {
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
@@ -9,7 +7,7 @@ namespace UpscaleVulkan.Web.Pages
     using Application.Services;
     using Model;
     
-    public partial class Upscale
+    public partial class UpscaleComponent : ComponentBase
     {
         private ComponentState state = ComponentState.Error;
         
