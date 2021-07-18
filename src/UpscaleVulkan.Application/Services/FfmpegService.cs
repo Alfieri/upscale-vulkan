@@ -1,9 +1,11 @@
 ﻿namespace UpscaleVulkan.Application.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
     using Core;
@@ -56,13 +58,12 @@
             }
             else
             {
-                var ffmpegProcessStartInfo = new ProcessStartInfo(this.ffmpegSettings.FfmpegBin);
-                ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.HardwareAcceleration} ";
-                ffmpegProcessStartInfo.Arguments += $"-i \"{video.VideoFile.FullName}\" ";
-                ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.VideoToFramesPixFormat} ";
-                ffmpegProcessStartInfo.Arguments += $"\"{this.framesOutputDir}/%07d.png\"";
-                Process ffmpegProcess = Process.Start(ffmpegProcessStartInfo);
-                await ffmpegProcess?.WaitForExitAsync();  
+                var argumentBuilder = new StringBuilder();
+                argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+                argumentBuilder.Append($"-i \"{video.VideoFile.FullName}\" ");
+                argumentBuilder.Append($"{this.ffmpegSettings.VideoToFramesPixFormat} ");
+                argumentBuilder.Append($"\"{this.framesOutputDir}/%07d.png\"");
+                await ProcessAsyncHelper.RunProcessAsync(this.ffmpegSettings.FfmpegBin, argumentBuilder.ToString());
             }
 
             return this.GetFrames();
@@ -93,51 +94,42 @@
             return Directory.GetFiles(this.framesOutputDir).Length > 0;
         }
 
-        public Task<FileInfo> CreateVideoFromFrames()
+        public async Task<FileInfo> CreateVideoFromFrames()
         {
             string scaledInputPath = Path.Combine(this.upscaleSettings.TempPath, this.upscaleSettings.ScaledPath);
             
             string intermediateVideo =
                 Path.Combine(this.upscaleSettings.TempPath, this.ffmpegSettings.IntermediateVideoFile);
-            
-            var ffmpegProcessStartInfo = new ProcessStartInfo(this.ffmpegSettings.FfmpegBin);
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.HardwareAcceleration} ";
-            ffmpegProcessStartInfo.Arguments += "-y ";
-            ffmpegProcessStartInfo.Arguments += $"-framerate {this.ffmpegSettings.Framerate} ";
-            ffmpegProcessStartInfo.Arguments += "-f image2 ";
-            ffmpegProcessStartInfo.Arguments += $"-i \"{scaledInputPath}/%07d.png\" ";
-            ffmpegProcessStartInfo.Arguments += $"-r {this.ffmpegSettings.Framerate} ";
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.FramesToVideoPixFormat} ";
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.Codec} ";
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.Preset} ";
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.AdditionalCodecParameter} ";
-            ffmpegProcessStartInfo.Arguments += $"\"{intermediateVideo}\"";
 
-            return Task.Run(() =>
-            {
-                var process = Process.Start(ffmpegProcessStartInfo);
-                process?.WaitForExit();
-                return new FileInfo(intermediateVideo);
-            });
+            var argumentBuilder = new StringBuilder();
+            argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+            argumentBuilder.Append("-y ");
+            argumentBuilder.Append($"-framerate {this.ffmpegSettings.Framerate} ");
+            argumentBuilder.Append("-f image2 ");
+            argumentBuilder.Append($"-i \"{scaledInputPath}/%07d.png\" ");
+            argumentBuilder.Append($"-r {this.ffmpegSettings.Framerate} ");
+            argumentBuilder.Append($"{this.ffmpegSettings.FramesToVideoPixFormat} ");
+            argumentBuilder.Append($"{this.ffmpegSettings.Codec} ");
+            argumentBuilder.Append($"{this.ffmpegSettings.Preset} ");
+            argumentBuilder.Append($"{this.ffmpegSettings.AdditionalCodecParameter} ");
+            argumentBuilder.Append($"\"{intermediateVideo}\"");
+
+            await ProcessAsyncHelper.RunProcessAsync(this.ffmpegSettings.FfmpegBin, argumentBuilder.ToString());
+            return new FileInfo(intermediateVideo);
         }
 
-        public Task CreateFinaleVideo(IntermediateVideo intermediateVideo)
+        public async Task CreateFinaleVideo(IntermediateVideo intermediateVideo)
         {
             string outputFile = Path.Combine(intermediateVideo.OriginalOriginalVideo.VideoFile.DirectoryName,
                 $"{Path.GetFileNameWithoutExtension(intermediateVideo.OriginalOriginalVideo.VideoFile.Name)}_out.mp4");
-            var ffmpegProcessStartInfo = new ProcessStartInfo(this.ffmpegSettings.FfmpegBin);
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.HardwareAcceleration} ";
-            ffmpegProcessStartInfo.Arguments += "-y ";
-            ffmpegProcessStartInfo.Arguments += $"-i \"{intermediateVideo.IntermediateVideoFile?.FullName}\" ";
-            ffmpegProcessStartInfo.Arguments += $"-i \"{intermediateVideo.OriginalOriginalVideo.VideoFile.FullName}\" ";
-            ffmpegProcessStartInfo.Arguments += $"{this.ffmpegSettings.ConcatVideosParameter} ";
-            ffmpegProcessStartInfo.Arguments += $"\"{outputFile}\"";
-            
-            return Task.Run(() =>
-            {
-                var process = Process.Start(ffmpegProcessStartInfo);
-                process?.WaitForExit();
-            });
+            var argumentBuilder = new StringBuilder();
+            argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+            argumentBuilder.Append("-y ");
+            argumentBuilder.Append($"-i \"{intermediateVideo.IntermediateVideoFile?.FullName}\" ");
+            argumentBuilder.Append($"-i \"{intermediateVideo.OriginalOriginalVideo.VideoFile.FullName}\" ");
+            argumentBuilder.Append($"{this.ffmpegSettings.ConcatVideosParameter} ");
+            argumentBuilder.Append($"\"{outputFile}\"");
+            await ProcessAsyncHelper.RunProcessAsync(this.ffmpegSettings.FfmpegBin, argumentBuilder.ToString());
         }
     }
 }
