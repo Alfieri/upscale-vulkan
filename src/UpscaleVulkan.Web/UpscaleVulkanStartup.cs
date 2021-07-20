@@ -26,7 +26,7 @@ namespace UpscaleVulkan.Web
 
         private static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddSingleton<IUpscaleService, UpscaleService>();
+            services.AddSingleton<IStateService, StateService>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IVideoConverter, FfmpegService>();
             services.AddSingleton<IWaifu2x, Waifu2xVulkan>();

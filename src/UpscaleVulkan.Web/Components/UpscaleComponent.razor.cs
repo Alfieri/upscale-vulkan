@@ -1,6 +1,7 @@
 ﻿namespace UpscaleVulkan.Web.Components
 {
     using System.Threading.Tasks;
+    using Application;
     using Microsoft.AspNetCore.Components;
     using Core;
     using Core.Settings;
@@ -11,29 +12,33 @@
     {
         private ComponentState state = ComponentState.Error;
         
-        private UpscaleSettings upscaleSettings { get; set; } = new();
+        private UpscaleSettings UpscaleSettings { get; set; } = new();
 
-        private Video video { get; set; }
+        private UpscaleContext Context { get; set; }
+
+        [Inject]
+        private ISettingsService SettingsService { get; set; }
         
         [Inject]
-        private ISettingsService settingsService { get; set; }
-        
-        [Inject]
-        private IUpscaleService upscaleService { get; set; }
+        private IStateService StateService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            this.upscaleSettings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
-            if (!string.IsNullOrEmpty(this.upscaleSettings.VideoFile))
+            this.UpscaleSettings = await this.SettingsService.LoadSettingsAsync<UpscaleSettings>();
+            if (!string.IsNullOrEmpty(this.UpscaleSettings.VideoFile))
             {
-                this.video = new Video(this.upscaleSettings.VideoFile);
+                this.Context = new UpscaleContext(await this.StateService.GetCurrentState())
+                {
+                    Video = new Video(this.UpscaleSettings.VideoFile)
+                };
+                
                 this.state = ComponentState.Content;
             }
         }
 
         private async Task StartUpscaling()
         {
-            await this.upscaleService.Upscale(this.video);
+            await this.Context.ProcessVideo();
         }
     }
 }
