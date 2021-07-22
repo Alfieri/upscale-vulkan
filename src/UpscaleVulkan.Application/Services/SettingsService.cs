@@ -1,5 +1,6 @@
 namespace UpscaleVulkan.Application.Services
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Persistence;
 
@@ -10,6 +11,17 @@ namespace UpscaleVulkan.Application.Services
         public SettingsService(ISettingsRepository settingsRepository)
         {
             this.settingsRepository = settingsRepository;
+        }
+
+        public async Task EnsurePath(string path)
+        {
+            await Task.Run(() =>
+            {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+            });
         }
 
         public async Task<TSettings> LoadSettingsAsync<TSettings>() where TSettings: new()

@@ -1,44 +1,42 @@
 ﻿namespace UpscaleVulkan.Web.Components
 {
-    using System.Threading.Tasks;
-    using Application;
     using Microsoft.AspNetCore.Components;
-    using Core;
-    using Core.Settings;
+    using System.Threading.Tasks;
+    
+    using Application;
     using Application.Services;
+    using Core;
+    using Core.MediaInfo;
+    using Core.Settings;
     using Model;
+    using Services;
     
     public partial class UpscaleComponent : ComponentBase
     {
         private ComponentState state = ComponentState.Error;
         
-        private UpscaleSettings UpscaleSettings { get; set; } = new();
+        private Video Video { get; set; }
 
-        private UpscaleContext Context { get; set; }
+        private FfprobeJson VideoInfo { get; set; }
 
         [Inject]
-        private ISettingsService SettingsService { get; set; }
-        
-        [Inject]
-        private IStateService StateService { get; set; }
+        private IUpscaleComponentViewService UpscaleComponentViewService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            this.UpscaleSettings = await this.SettingsService.LoadSettingsAsync<UpscaleSettings>();
-            if (!string.IsNullOrEmpty(this.UpscaleSettings.VideoFile))
+            await this.UpscaleComponentViewService.InitializeAsync();
+            this.Video = this.UpscaleComponentViewService.GetVideo();
+            this.VideoInfo = this.UpscaleComponentViewService.GetVideoInfo();
+
+            if (this.Video is not null)
             {
-                this.Context = new UpscaleContext(await this.StateService.GetCurrentState())
-                {
-                    Video = new Video(this.UpscaleSettings.VideoFile)
-                };
-                
                 this.state = ComponentState.Content;
             }
         }
 
         private async Task StartUpscaling()
         {
-            await this.Context.ProcessVideo();
+            await this.UpscaleComponentViewService.ProcessVideo();
         }
     }
 }

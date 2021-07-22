@@ -1,11 +1,11 @@
-using UpscaleVulkan.Web.Services;
-
 namespace UpscaleVulkan.Web
 {
+    using Microsoft.Extensions.DependencyInjection;
+    
     using Application.Infrastructure;
     using Application.Persistence;
     using Application.Services;
-    using Microsoft.Extensions.DependencyInjection;
+    using Services;
 
     public static class UpscaleVulkanStartup
     {
@@ -19,7 +19,7 @@ namespace UpscaleVulkan.Web
 
         private static IServiceCollection AddViewServices(this IServiceCollection services)
         {
-            services.AddSingleton<IVideoInfoService, VideoInfoService>();
+            services.AddSingleton<IUpscaleComponentViewService, UpscaleComponentViewService>();
 
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿namespace UpscaleVulkan.Web.Components
 {
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
     using Application.Services;
@@ -10,16 +11,19 @@
         private UpscaleSettings settings = new();
         
         [Inject]
-        private ISettingsService settingsService { get; set; }
+        private ISettingsService SettingsService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            this.settings = await this.settingsService.LoadSettingsAsync<UpscaleSettings>();
+            this.settings = await this.SettingsService.LoadSettingsAsync<UpscaleSettings>();
         }
 
         private async Task SaveSettings()
         {
-            await this.settingsService.SaveSettingsAsync(this.settings);
+            await this.SettingsService.EnsurePath(this.settings.TempPath);
+            await this.SettingsService.EnsurePath(Path.Combine(this.settings.TempPath, this.settings.ScaledPath));
+            await this.SettingsService.EnsurePath(Path.Combine(this.settings.TempPath, this.settings.FramesPath));
+            await this.SettingsService.SaveSettingsAsync(this.settings);
         }
     }
 }
