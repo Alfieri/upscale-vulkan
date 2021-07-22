@@ -42,7 +42,7 @@
                 this.video = new Video(this.upscaleSettings.VideoFile);
                 this.videoInfo = await this.videoConverter.GetVideoInfo(this.video);
                 var currentState = await this.stateService.GetCurrentState(this.upscaleSettings, this.videoInfo);
-                this.context = new UpscaleContext(currentState);
+                this.context = new UpscaleContext(currentState) { Video = this.video };
             }
         }
 

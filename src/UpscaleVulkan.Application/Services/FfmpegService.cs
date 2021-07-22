@@ -59,9 +59,9 @@
             else
             {
                 var argumentBuilder = new StringBuilder();
-                argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+                argumentBuilder.Append($"-hwaccel {this.ffmpegSettings.HardwareAcceleration} ");
                 argumentBuilder.Append($"-i \"{video.VideoFile.FullName}\" ");
-                argumentBuilder.Append($"{this.ffmpegSettings.VideoToFramesPixFormat} ");
+                argumentBuilder.Append($"-pix_fmt {this.ffmpegSettings.VideoToFramesPixFormat} ");
                 argumentBuilder.Append($"\"{this.framesOutputDir}/%07d.png\"");
                 await ProcessAsyncHelper.RunProcessAsync(this.ffmpegSettings.FfmpegBin, argumentBuilder.ToString());
             }
@@ -102,15 +102,15 @@
                 Path.Combine(this.upscaleSettings.TempPath, this.ffmpegSettings.IntermediateVideoFile);
 
             var argumentBuilder = new StringBuilder();
-            argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+            argumentBuilder.Append($"-hwaccel {this.ffmpegSettings.HardwareAcceleration} ");
             argumentBuilder.Append("-y ");
             argumentBuilder.Append($"-framerate {this.ffmpegSettings.Framerate} ");
             argumentBuilder.Append("-f image2 ");
             argumentBuilder.Append($"-i \"{scaledInputPath}/%07d.png\" ");
             argumentBuilder.Append($"-r {this.ffmpegSettings.Framerate} ");
-            argumentBuilder.Append($"{this.ffmpegSettings.FramesToVideoPixFormat} ");
-            argumentBuilder.Append($"{this.ffmpegSettings.Codec} ");
-            argumentBuilder.Append($"{this.ffmpegSettings.Preset} ");
+            argumentBuilder.Append($"-pix_fmt {this.ffmpegSettings.FramesToVideoPixFormat} ");
+            argumentBuilder.Append($"-c:v {this.ffmpegSettings.Codec} ");
+            argumentBuilder.Append($"-preset {this.ffmpegSettings.Preset} ");
             argumentBuilder.Append($"{this.ffmpegSettings.AdditionalCodecParameter} ");
             argumentBuilder.Append($"\"{intermediateVideo}\"");
 
@@ -123,7 +123,7 @@
             string outputFile = Path.Combine(intermediateVideo.OriginalOriginalVideo.VideoFile.DirectoryName,
                 $"{Path.GetFileNameWithoutExtension(intermediateVideo.OriginalOriginalVideo.VideoFile.Name)}_out.mp4");
             var argumentBuilder = new StringBuilder();
-            argumentBuilder.Append($"{this.ffmpegSettings.HardwareAcceleration} ");
+            argumentBuilder.Append($"-hwaccel {this.ffmpegSettings.HardwareAcceleration} ");
             argumentBuilder.Append("-y ");
             argumentBuilder.Append($"-i \"{intermediateVideo.IntermediateVideoFile?.FullName}\" ");
             argumentBuilder.Append($"-i \"{intermediateVideo.OriginalOriginalVideo.VideoFile.FullName}\" ");

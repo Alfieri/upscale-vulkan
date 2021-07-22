@@ -15,7 +15,7 @@
         [Parameter]
         public FfprobeJson VideoInfo { get; set; } = new();
 
-        protected override void OnInitialized()
+        protected override void OnParametersSet()
         {
             this.videoStream = this.VideoInfo.Streams.VideoStream();
             this.duration = this.GetHumanReadableDuration();
