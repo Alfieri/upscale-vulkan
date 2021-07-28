@@ -8,13 +8,6 @@
 }
 else
 {
-    <h5>Upscale video @Video.VideoFile.Name</h5>
-    <div class="container">
-        <div class="row">
-            <VideoInfoComponent VideoInfo="@VideoInfo"/>
-        </div>
-        <div class="row">
-            <button type="button" class="btn btn-primary" @onclick="StartUpscaling">Start Upscale</button>
-        </div>
-    </div>
+    <VideoInfoComponent VideoInfo="@VideoInfo"/>
+    <button type="button" class="btn btn-primary" @onclick="StartUpscaling">Start Upscale</button>
 }
