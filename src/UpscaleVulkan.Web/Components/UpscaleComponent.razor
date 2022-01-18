@@ -1,0 +1,13 @@
+﻿@using UpscaleVulkan.Web.Model
+
+@if (state is ComponentState.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        Please go to settings and choose a file
+    </div>
+}
+else
+{
+    <VideoInfoComponent VideoInfo="@VideoInfo"/>
+    <button type="button" class="btn btn-primary" @onclick="StartUpscaling">Start Upscale</button>
+}

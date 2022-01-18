@@ -1,0 +1,19 @@
+<div class="card">
+  <div class="card-header">
+    @VideoInfo?.Format?.Filename
+  </div>
+  @if (videoStream is null)
+  {
+    <div class="alert alert-danger" role="alert">
+     The video has no Video stream
+   </div>
+  }
+  else
+  {
+    <div class="card-body">
+      <h5 class="card-title">Video stream informations</h5>
+      <p class="card-text">Bitrate: @videoStream.BitRate || Codec: @videoStream.CodecName || Pix format: @videoStream.PixFormat</p>
+      <p class="card-text">Length: @duration || Framerate: @videoStream.Framerate || #Frames: @videoStream.NumberOfFrames</p>
+    </div>
+  }
+</div>

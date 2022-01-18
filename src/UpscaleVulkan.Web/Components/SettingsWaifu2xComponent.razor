@@ -1,0 +1,29 @@
+<EditForm Model="@settings" OnSubmit="@SaveSettings">
+  <div class="card">
+    <div class="card-header">
+      Waifu2x Settings
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Waifu2x Settings</h5>
+      <form>
+        <div class="form-group">
+          <label>Model Path</label>
+          <InputText class="form-control" @bind-Value="settings.ModelPath" />
+        </div>
+        <div class="form-group">
+          <label>Scale factor</label>
+          <InputNumber class="form-control" @bind-Value="settings.Scale" />
+        </div>
+        <div class="form-group">
+          <label>Noise level</label>
+          <InputNumber class="form-control" @bind-Value="settings.NoiseLevel" />
+        </div>
+        <div class="form-group">
+          <label>Waifu2x binary</label>
+          <InputText class="form-control" @bind-Value="settings.Executable" />
+        </div>
+      </form>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </div>
+  </div>
+</EditForm>
