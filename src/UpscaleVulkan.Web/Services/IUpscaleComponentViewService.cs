@@ -1,18 +1,17 @@
-﻿namespace UpscaleVulkan.Web.Services
-{
-    using System.Threading.Tasks;
-    
-    using Core;
-    using Core.MediaInfo;
-    
-    public interface IUpscaleComponentViewService
-    {
-        FfprobeJson GetVideoInfo();
-        
-        Video GetVideo();
+﻿namespace UpscaleVulkan.Web.Services;
 
-        Task InitializeAsync();
+using System.Threading.Tasks;
+    
+using Core;
+using Core.MediaInfo;
+    
+public interface IUpscaleComponentViewService
+{
+    FfprobeJson GetVideoInfo();
         
-        Task ProcessVideo();
-    }
+    Video GetVideo();
+
+    Task InitializeAsync();
+        
+    Task ProcessVideo();
 }

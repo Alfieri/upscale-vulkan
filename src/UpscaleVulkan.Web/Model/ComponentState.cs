@@ -1,9 +1,8 @@
-﻿namespace UpscaleVulkan.Web.Model
+﻿namespace UpscaleVulkan.Web.Model;
+
+public enum ComponentState
 {
-    public enum ComponentState
-    {
-        Loading,
-        Content,
-        Error
-    }
+    Loading,
+    Content,
+    Error
 }
