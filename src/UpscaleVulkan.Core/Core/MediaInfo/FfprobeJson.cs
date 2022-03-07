@@ -1,14 +1,12 @@
-namespace UpscaleVulkan.Core.MediaInfo
+namespace UpscaleVulkan.Core.MediaInfo;
+
+using System.Text.Json.Serialization;
+
+public class FfprobeJson
 {
-    using System.Collections.Generic;
-    using System.Text.Json.Serialization;
+    [JsonPropertyName("streams")]
+    public List<StreamInfo> Streams { get; set; }
 
-    public class FfprobeJson
-    {
-        [JsonPropertyName("streams")]
-        public List<StreamInfo> Streams { get; set; }
-
-        [JsonPropertyName("format")]
-        public FormatInfo Format { get; set; }
-    }
+    [JsonPropertyName("format")]
+    public FormatInfo Format { get; set; }
 }

@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{51FA5441-DF8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Core", "src\UpscaleVulkan.Core\UpscaleVulkan.Core.csproj", "{086A9381-2ABC-4813-86F9-9556BE986F73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Cli", "src\UpscaleVulkan.Cli\UpscaleVulkan.Cli.csproj", "{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_UpscaleVulkan.Cli", "src\_UpscaleVulkan.Cli\_UpscaleVulkan.Cli.csproj", "{EA6CE9BD-C00C-4AD8-BD1F-CC4F93812641}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpscaleVulkan.Web", "src\UpscaleVulkan.Web\UpscaleVulkan.Web.csproj", "{D9783598-5D0B-439F-9C28-D47DE8C612C6}"
 EndProject

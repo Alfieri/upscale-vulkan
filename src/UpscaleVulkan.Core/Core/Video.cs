@@ -1,33 +1,28 @@
-﻿namespace UpscaleVulkan.Core
+﻿namespace UpscaleVulkan.Core;
+
+public class Video
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
+    private readonly List<Frame> frames = new();
 
-    public class Video
+    public Video(string path)
     {
-        private readonly List<Frame> frames = new();
-
-        public Video(string path)
+        if (string.IsNullOrEmpty(path))
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(nameof(path), "Video file must be set");
-            }
+            throw new ArgumentNullException(nameof(path), "Video file must be set");
+        }
             
-            this.VideoFile = new FileInfo(path);
-        }
+        this.VideoFile = new FileInfo(path);
+    }
         
-        public FileInfo VideoFile { get; }
+    public FileInfo VideoFile { get; }
 
-        public void AddFrames(List<Frame> extractFrames)
-        {
-            this.frames.AddRange(extractFrames);
-        }
+    public void AddFrames(List<Frame> extractFrames)
+    {
+        this.frames.AddRange(extractFrames);
+    }
 
-        public List<Frame> GetFrames()
-        {
-            return this.frames;
-        }
+    public List<Frame> GetFrames()
+    {
+        return this.frames;
     }
 }
